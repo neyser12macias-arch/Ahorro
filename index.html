@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#000000">
-<title>MiDinero v5 · Nexo AI</title>
+<title>MiDinero v7 · Nexo AI Fixed</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 :root{
@@ -55,7 +55,6 @@ touch-action:manipulation;
 @keyframes nexoPulse{0%,100%{transform:scale(1);box-shadow:0 8px 32px rgba(99,102,241,0.4),0 0 0 0 rgba(139,92,246,0.5)}50%{transform:scale(1.05);box-shadow:0 8px 32px rgba(99,102,241,0.6),0 0 0 12px rgba(139,92,246,0)}}
 @keyframes nexoRotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 @keyframes nexoWave{0%,100%{transform:scaleY(0.3)}50%{transform:scaleY(1)}}
-@keyframes nexoSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes msgIn{from{opacity:0;transform:translateY(8px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes typing{0%,60%,100%{opacity:0.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
 #splash{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s var(--ease-smooth),transform 0.6s var(--ease-smooth)}
@@ -352,27 +351,26 @@ canvas{width:100%!important;height:100%!important}
 .tr-arrow{text-align:center;font-size:20px;padding:8px 0;color:var(--m);opacity:0.6}
 
 /* ═══════════════════════════════════════════════════════════════
-   NEXO AI — Botón flotante + Panel
+   NEXO AI — Botón flotante con POSICIÓN FIJA
    ═══════════════════════════════════════════════════════════════ */
 #nexoBtn{
   position:fixed;
   bottom:90px;
-  right:16px;
+  right:12px;
   width:60px;
   height:60px;
   border-radius:50%;
   background:var(--nexo-g);
   border:none;
   cursor:pointer;
-  z-index:90;
+  z-index:75;
   display:flex;
   align-items:center;
   justify-content:center;
   animation:nexoPulse 3s ease-in-out infinite;
-  transition:transform 0.2s var(--ease-spring);
+  transition:opacity 0.3s var(--ease-smooth),transform 0.2s var(--ease-spring);
   box-shadow:0 8px 32px rgba(99,102,241,0.4);
-  touch-action:none;
-  user-select:none;
+  pointer-events:auto;
 }
 #nexoBtn:active{transform:scale(0.9)}
 #nexoBtn::before{
@@ -421,6 +419,12 @@ canvas{width:100%!important;height:100%!important}
   background:var(--r);
   border:2px solid var(--bg);
   animation:bounce 1.5s ease infinite;
+}
+/* Ocultar botón cuando el panel está abierto */
+#nexoBtn.hidden{
+  opacity:0;
+  transform:scale(0.5);
+  pointer-events:none;
 }
 
 #nexoOverlay{
@@ -792,7 +796,7 @@ canvas{width:100%!important;height:100%!important}
 </div>
 </div>
 
-<!-- ═══════════════ MODALES EXISTENTES (abreviados) ═══════════════ -->
+<!-- ═══════════════ MODALES ═══════════════ -->
 <div class="mo" id="expModal" onclick="if(event.target===this)closeModal('expModal')">
 <div class="mb"><div class="mb-handle"></div><div class="mb-body">
 <div class="mt" id="expModalTitle">🛒 Registrar Gasto</div>
@@ -945,7 +949,7 @@ canvas{width:100%!important;height:100%!important}
 </div>
 </div></div></div>
 
-<!-- ═══════════════ PESTAÑAS PRINCIPALES ═══════════════ -->
+<!-- ═══════════════ PESTAÑAS ═══════════════ -->
 <main>
 <section class="tab active" id="tab-semana">
 <div class="dtip">
@@ -1236,8 +1240,8 @@ Logros 🏆
 </div>
 </nav>
 
-<!-- ═══════════════ NEXO AI — Botón flotante ═══════════════ -->
-<button id="nexoBtn" onclick="if(!nexoState.dragging)toggleNexo()" aria-label="Abrir Nexo AI">
+<!-- ═══════════════ NEXO AI — Botón flotante FIJO ═══════════════ -->
+<button id="nexoBtn" onclick="toggleNexo()" aria-label="Abrir Nexo AI">
 <span class="nexo-letter">N</span>
 <span class="nexo-label">Nexo AI</span>
 </button>
@@ -1284,7 +1288,7 @@ Logros 🏆
 /* ═══════════════════════════════════════════════════════════════
    ALMACENAMIENTO Y CONFIGURACIÓN
    ═══════════════════════════════════════════════════════════════ */
-const SK='md5_';
+const SK='md7_';
 const sv=(k,v)=>{try{localStorage.setItem(SK+k,JSON.stringify(v))}catch(e){}};
 const ld=(k,d)=>{try{const v=localStorage.getItem(SK+k);return v!==null?JSON.parse(v):d}catch(e){return d}};
 
@@ -1336,8 +1340,7 @@ const getExpenseTotal=()=>{
 };
 
 /* ═══════════════════════════════════════════════════════════════
-   LÓGICA DE TRANSPORTE CORREGIDA
-   Solo $0.30 UNA VEZ por día
+   LÓGICA DE TRANSPORTE (UNA VEZ POR DÍA)
    ═══════════════════════════════════════════════════════════════ */
 let lastTransportDate=ld('lastTransportDate','');
 
@@ -1345,31 +1348,25 @@ function hasTransportReservedToday(){
   const today=new Date().toDateString();
   return lastTransportDate===today;
 }
-
 function markTransportReservedToday(){
   lastTransportDate=new Date().toDateString();
   sv('lastTransportDate',lastTransportDate);
 }
-
 function resetTransportIfNewDay(){
   const today=new Date().toDateString();
-  if(lastTransportDate && lastTransportDate!==today){
+  if(lastTransportDate&&lastTransportDate!==today){
     lastTransportDate='';
     sv('lastTransportDate','');
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   DISTRIBUCIÓN CON TRANSPORTE FIJO (UNA VEZ AL DÍA)
-   ═══════════════════════════════════════════════════════════════ */
 function getDistribution(amount){
   resetTransportIfNewDay();
   const reserve=Number(cfg.transportReserve||0.30);
   let transport=0;
   let remaining=amount;
   
-  // Solo reservar transporte si aún no se ha hecho hoy
-  if(!hasTransportReservedToday() && amount>0){
+  if(!hasTransportReservedToday()&&amount>0){
     transport=Math.min(amount,reserve);
     remaining=amount-transport;
     markTransportReservedToday();
@@ -1436,9 +1433,6 @@ function addXP(pts){
   }
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   TIPS, LOGROS, RETOS
-   ═══════════════════════════════════════════════════════════════ */
 const TIPS=['Cada centavo ahorrado hoy es libertad mañana 💪','El fondo de emergencia es tu red de seguridad 🛡️','Ahorrar es gastar con propósito 🎯','Si puedes esperar 7 días, probablemente no lo necesitas ⏳','Los pequeños ahorros se convierten en grandes logros 🚀','Tu dinero libre es tu poder — úsalo con inteligencia 🧠','El mejor momento para ahorrar fue ayer, el segundo mejor es ahora ⚡','Cada compra impulsiva evitada es una victoria 🏆','Saber en qué gastas es el primer paso para gastar mejor 📊'];
 const getDTip=()=>TIPS[Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/864e5)%TIPS.length];
 
@@ -1552,7 +1546,7 @@ function mkParticles(){
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   INGRESOS DE DINERO (con lógica de transporte corregida)
+   INGRESOS DE DINERO
    ═══════════════════════════════════════════════════════════════ */
 function toggleInput(){
   if(navigator.vibrate)navigator.vibrate(10);
@@ -1575,11 +1569,7 @@ function updPreview(){
   if(el('prevEmg'))el('prevEmg').textContent=curr(dist.emergency);
   if(el('prevRwd'))el('prevRwd').textContent=curr(dist.rewards);
   if(el('prevTrn'))el('prevTrn').textContent=curr(dist.transport);
-  if(el('prevSavLbl'))el('prevSavLbl').textContent=cfg.fundPercents.savings+'% Ahorro';
-  if(el('prevEmgLbl'))el('prevEmgLbl').textContent=cfg.fundPercents.emergency+'% Emerg';
-  if(el('prevRwdLbl'))el('prevRwdLbl').textContent=cfg.fundPercents.rewards+'% Ocio';
   
-  // Nota de transporte
   const note=el('transportNote');
   if(note){
     if(dist.transport===0&&amt>0){
@@ -1594,7 +1584,7 @@ function updPreview(){
   }
 }
 
-function addMoney(amtOverride){
+function addMoney(amtOverride,specificFund){
   if(navigator.vibrate)navigator.vibrate(15);
   let amt;
   if(amtOverride!==undefined){
@@ -1602,31 +1592,45 @@ function addMoney(amtOverride){
   }else{
     amt=parseFloat(document.getElementById('todayAmt').value);
   }
-  if(isNaN(amt)||amt<=0)return;
+  if(isNaN(amt)||amt<=0)return null;
   
   const weekEntries=entries.filter(e=>e.week===curWeek);
   const dayNames=['Lunes','Martes','Miércoles','Jueves','Viernes'];
   const dayIdx=weekEntries.length;
   const day=dayIdx<dayNames.length?dayNames[dayIdx]:'Día '+(dayIdx+1);
   
-  const dist=getDistribution(amt);
-  
-  funds.savings+=dist.savings;
-  funds.emergency+=dist.emergency;
-  funds.rewards+=dist.rewards;
-  funds.transport+=dist.transport;
+  let dist;
+  if(specificFund){
+    dist={
+      transport:0,
+      savings:specificFund==='savings'?amt:0,
+      emergency:specificFund==='emergency'?amt:0,
+      rewards:specificFund==='rewards'?amt:0,
+      transportAmt:specificFund==='transport'?amt:0,
+      transportAlreadyReserved:false,
+      directToFund:specificFund
+    };
+    funds[specificFund]=(funds[specificFund]||0)+amt;
+  }else{
+    dist=getDistribution(amt);
+    funds.savings+=dist.savings;
+    funds.emergency+=dist.emergency;
+    funds.rewards+=dist.rewards;
+    funds.transport+=dist.transport;
+  }
   sv('funds',funds);
   
   const now=Date.now();
   const entry={
     id:now,ts:now,day,week:curWeek,
     received:amt,free:amt,
-    savings:dist.savings,emergency:dist.emergency,rewards:dist.rewards,transport:dist.transport,
-    date:'Semana '+curWeek
+    savings:dist.savings||0,emergency:dist.emergency||0,rewards:dist.rewards||0,transport:dist.transport||0,
+    date:'Semana '+curWeek,
+    directToFund:specificFund||null
   };
   entries.push(entry);
   sv('entries',entries);
-  fundHistory.push({type:'income',amount:amt,ts:now,day,week:curWeek,distribution:dist});
+  fundHistory.push({type:'income',amount:amt,ts:now,day,week:curWeek,distribution:dist,specificFund:specificFund||null});
   sv('fundHistory',fundHistory);
   
   updStreak();
@@ -1641,7 +1645,7 @@ function addMoney(amtOverride){
   sv('goals',goals);
   
   if(funds.emergency>=cfg.emergGoal){
-    setTimeout(()=>{showCeleb('¡Fondo completo!','¡3 semanas cubiertas!');launchConf()},500);
+    setTimeout(()=>{showCeleb('¡Fondo completo!','¡Fondo de emergencia completo!');launchConf()},500);
   }
   
   if(amtOverride===undefined){
@@ -1662,9 +1666,9 @@ function delEntry(id){
   if(!confirm('¿Eliminar este registro?'))return;
   const e=entries.find(x=>x.id===id);
   if(e){
-    funds.savings-=e.savings;
-    funds.emergency-=e.emergency;
-    funds.rewards-=e.rewards;
+    funds.savings-=e.savings||0;
+    funds.emergency-=e.emergency||0;
+    funds.rewards-=e.rewards||0;
     funds.transport-=(e.transport||0);
     if(funds.savings<0)funds.savings=0;
     if(funds.emergency<0)funds.emergency=0;
@@ -2261,18 +2265,20 @@ function updateAll(){
 
 /* ═══════════════════════════════════════════════════════════════
    ═══════════════════════════════════════════════════════════════
-   N E X O   A I   —   S I S T E M A   C O M P L E T O
+   N E X O   A I   —   P O S I C I Ó N   F I J A
    ═══════════════════════════════════════════════════════════════
+   • Botón siempre visible en esquina inferior derecha
+   • Se oculta cuando el panel está abierto
+   • Vuelve a aparecer al cerrar el panel
+   • SIN funcionalidad de arrastre
    ═══════════════════════════════════════════════════════════════ */
 
 const nexoState={
   open:false,
   fullscreen:false,
-  dragging:false,
   listening:false,
   chat:ld('nexo_chat',[]),
   context:ld('nexo_context',{lastAction:null,lastAmount:null,lastFund:null,lastCategory:null}),
-  position:ld('nexo_position',null),
   recognition:null,
   pendingConfirm:null
 };
@@ -2293,75 +2299,7 @@ function nexoQuickInput(text){
   if(inp){inp.value=text;inp.focus()}
 }
 
-/* ═══ Posición persistente del botón ═══ */
-function initNexoPosition(){
-  const btn=document.getElementById('nexoBtn');
-  if(nexoState.position){
-    btn.style.left=nexoState.position.left+'px';
-    btn.style.top=nexoState.position.top+'px';
-    btn.style.right='auto';
-    btn.style.bottom='auto';
-  }
-}
-
-function saveNexoPosition(){
-  const btn=document.getElementById('nexoBtn');
-  const rect=btn.getBoundingClientRect();
-  nexoState.position={left:rect.left,top:rect.top};
-  sv('nexo_position',nexoState.position);
-}
-
-/* ═══ Arrastre del botón ═══ */
-function initNexoDrag(){
-  const btn=document.getElementById('nexoBtn');
-  let startX,startY,startLeft,startTop,moved=false;
-  
-  const onStart=e=>{
-    const touch=e.touches?e.touches[0]:e;
-    startX=touch.clientX;
-    startY=touch.clientY;
-    const rect=btn.getBoundingClientRect();
-    startLeft=rect.left;
-    startTop=rect.top;
-    moved=false;
-    nexoState.dragging=false;
-    btn.style.transition='none';
-  };
-  
-  const onMove=e=>{
-    const touch=e.touches?e.touches[0]:e;
-    const dx=touch.clientX-startX;
-    const dy=touch.clientY-startY;
-    if(Math.abs(dx)>5||Math.abs(dy)>5){
-      moved=true;
-      nexoState.dragging=true;
-      const newLeft=Math.max(0,Math.min(window.innerWidth-60,startLeft+dx));
-      const newTop=Math.max(0,Math.min(window.innerHeight-60,startTop+dy));
-      btn.style.left=newLeft+'px';
-      btn.style.top=newTop+'px';
-      btn.style.right='auto';
-      btn.style.bottom='auto';
-      if(e.cancelable)e.preventDefault();
-    }
-  };
-  
-  const onEnd=()=>{
-    btn.style.transition='';
-    if(moved){
-      saveNexoPosition();
-      setTimeout(()=>{nexoState.dragging=false},100);
-    }
-  };
-  
-  btn.addEventListener('mousedown',onStart);
-  document.addEventListener('mousemove',onMove);
-  document.addEventListener('mouseup',onEnd);
-  btn.addEventListener('touchstart',onStart,{passive:false});
-  document.addEventListener('touchmove',onMove,{passive:false});
-  document.addEventListener('touchend',onEnd);
-}
-
-/* ═══ Abrir/Cerrar Nexo ═══ */
+/* ═══ Abrir/Cerrar Nexo (con ocultar/mostrar botón) ═══ */
 function toggleNexo(){
   if(nexoState.open)closeNexo();
   else openNexo();
@@ -2369,6 +2307,9 @@ function toggleNexo(){
 
 function openNexo(){
   nexoState.open=true;
+  // Ocultar botón flotante
+  document.getElementById('nexoBtn').classList.add('hidden');
+  // Mostrar overlay y panel
   document.getElementById('nexoOverlay').classList.add('show');
   document.getElementById('nexoPanel').classList.add('show');
   document.getElementById('nexoBtn').classList.remove('has-notif');
@@ -2382,8 +2323,11 @@ function openNexo(){
 
 function closeNexo(){
   nexoState.open=false;
+  // Ocultar panel y overlay
   document.getElementById('nexoOverlay').classList.remove('show');
   document.getElementById('nexoPanel').classList.remove('show');
+  // Mostrar botón flotante de nuevo
+  document.getElementById('nexoBtn').classList.remove('hidden');
   stopNexoVoice();
 }
 
@@ -2453,121 +2397,176 @@ function escapeHtml(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-/* ═══ MOTOR NLP — Reconocimiento de intenciones ═══ */
+/* ═══════════════════════════════════════════════════════════════
+   MOTOR NLP PRO
+   ═══════════════════════════════════════════════════════════════ */
+
+const FUND_MAP={
+  savings:['ahorro','ahorros','alcancia','alcancía','chanchito','chanchita'],
+  emergency:['emergencia','emergencias','fondo de emergencia','emerg'],
+  rewards:['ocio','gustos','antojos','libre','libres','premio','premios','recreacion','recreación','diversion','diversión'],
+  transport:['transporte','bus','buses','pasaje','pasajes','movilidad','colectivo']
+};
+
+const CATEGORY_MAP={
+  '🍔 Comida':['comida','comer','almuerzo','cena','desayuno','restaurante','hamburguesa','pizza','pollo','carne'],
+  '🎮 Juegos':['juego','juegos','videojuego','videojuegos','game','games','consola'],
+  '👕 Ropa':['ropa','camisa','pantalon','pantalón','zapato','zapatos','vestido','blusa','jeans'],
+  '📱 Tech':['tech','celular','computadora','computador','audifono','audífono','audifonos','audífonos','cargador','cable','tablet','laptop'],
+  '🎬 Entre':['pelicula','película','peliculas','películas','cine','netflix','serie','series','entretenimiento','disney','spotify'],
+  '📚 Escuela':['escuela','colegio','curso','cursos','libro','libros','copia','copias','cuaderno','cuadernos','lapiz','lápiz','lapices','lápices','papel','papeles','fotocopia','fotocopias'],
+  '🍿 Snacks':['snack','snacks','galleta','galletas','dulce','dulces','refresco','soda','jugo','chocolate','chocolates','caramelo','caramelos','helado','papitas'],
+  '🚌 Transporte':['bus','buses','transporte','pasaje','pasajes','movilidad','colectivo','metro','tren','uber','didi','taxi'],
+  '💊 Salud':['medicina','medicinas','doctor','farmacia','salud','pastilla','pastillas','consulta','examen','hospital','clinica','clínica'],
+  '🎁 Otros':['otro','otros','otra','otras','varios','varias']
+};
+
 function processNexoCommand(text){
   showNexoTyping();
   const delay=400+Math.random()*400;
   setTimeout(()=>{
     hideNexoTyping();
-    const intent=recognizeIntent(text);
+    const intent=recognizeIntentPro(text);
     executeIntent(intent,text);
   },delay);
 }
 
-function recognizeIntent(text){
-  const t=text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function recognizeIntentPro(text){
+  const t=text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
   
-  // Números
-  const amount=extractAmount(t);
-  
-  // INTENT: Ingreso
-  if(/(^|\b)(agrega|añade|recibi|entro|registra|dame|me dieron|sum|suma|ingresa|deposita|anota)\b.*\b(dolar|dolares|peso|pesos|centavo|centavos|\$|\d)/.test(t)||
-     /(^|\b)(agrega|añade|recibi|entro|registra)\b.*(un|uno|dos|tres|\$?\d)/.test(t)&&amount>0){
-    return{intent:'income',amount};
+  // Confirmaciones
+  if(nexoState.pendingConfirm){
+    if(/^(si|sí|confirmar|ok|dale|adelante|confirmo|claro|por supuesto)$/.test(t))return{intent:'confirm_yes'};
+    if(/^(no|cancelar|cancel|nel|nada|negativo|mejor no)$/.test(t))return{intent:'confirm_no'};
   }
   
-  // INTENT: Gasto
-  if(/(^|\b)(gaste|gasto|compre|compra|pague|pago|saque|saco|saque|use|descontar|restar)\b/.test(t)&&amount>0){
-    const cat=extractCategory(t);
-    return{intent:'expense',amount,category:cat};
+  // TRANSFERENCIAS
+  const transferPatterns=[
+    /\b(pasa|pase|pasar|mueve|mover|transfiere|transferir|envia|enviar|manda|mandar|lleva|llevar|cambia)\b.*?(\btodo\b|\bcompleto\b|\bentero\b)?\s*(?:el\s+)?(?:dinero\s+)?(?:de\s+)?(.+?)\s+(?:a|hacia|para)\s+(.+)/i,
+    /\b(pasa|pase|pasar|mueve|mover|transfiere|transferir|envia|enviar|manda|mandar)\b\s+(.+?)\s+(?:de\s+)?(.+?)\s+(?:a|hacia|para)\s+(.+)/i
+  ];
+  
+  for(const pattern of transferPatterns){
+    const match=t.match(pattern);
+    if(match){
+      const isAll=match[2]&&/\b(todo|completo|entero)\b/.test(match[2]);
+      let amount,fromFund,toFund;
+      if(isAll){
+        fromFund=extractFundFromText(match[3]||match[1]);
+        toFund=extractFundFromText(match[4]||match[3]);
+        amount='all';
+      }else{
+        amount=extractAmount(match[2]);
+        fromFund=extractFundFromText(match[3]);
+        toFund=extractFundFromText(match[4]);
+      }
+      if(fromFund&&toFund&&fromFund!==toFund)return{intent:'transfer',amount,from:fromFund,to:toFund,isAll};
+    }
   }
   
-  // INTENT: Consulta saldo
-  if(/(^|\b)(cuanto|cuanto|saldo|tengo|disponible|patrimonio|total|balance)\b/.test(t)&&
-     /dinero|tengo|saldo|disponible|hay|queda/.test(t)){
-    const fund=extractFund(t);
+  // INGRESOS DIRECTOS A FONDO
+  const directIncomePatterns=[
+    /\b(agrega|añade|pon|deposita|ingresa|suma|anota|recibi|entro|dame|da|meter|meti|coloca|colocar)\b.*?(\d+(?:[.,]\d+)?|\bun\b|\buno\b|\bdos\b|\btres\b|\bcuatro\b|\bcinco\b|\bseis\b|\bsiete\b|\bocho\b|\bnueve\b|\bdiez\b|\bcien\b|\bmedio\b|\bmedia\b)\s*(dolar|dolares|\$|centavo|centavos)?\s+(?:solamente\s+|solo\s+|unicamente\s+|únicamente\s+|directamente\s+)?(?:a|en|para|al)\s+(ahorro|ahorros|emergencia|ocio|transporte|bus|fondo\s+de\s+emergencia)/i
+  ];
+  
+  for(const pattern of directIncomePatterns){
+    const match=t.match(pattern);
+    if(match){
+      const amount=extractAmount(match[2]+' '+(match[3]||''));
+      const fund=extractFundFromText(match[4]);
+      if(amount>0&&fund)return{intent:'direct_income',amount,fund};
+    }
+  }
+  
+  // GASTOS
+  const expensePatterns=[
+    /\b(gaste|gasto|gastar|compre|compra|comprar|pague|pago|pagar|use|uso|usar|saque|saco|sacar|descontar|reste|restar|quite|quitar)\b.*?(\d+(?:[.,]\d+)?|\bun\b|\buno\b|\bdos\b|\btres\b|\bcuatro\b|\bcinco\b|\bseis\b|\bsiete\b|\bocho\b|\bnueve\b|\bdiez\b|\bcien\b|\bmedio\b|\bmedia\b|\bcincuenta\b|\btreinta\b|\bveinte\b)\s*(dolar|dolares|\$|centavo|centavos)?(?:\s+(?:de|en|por|para)\s+)?(.*)/i
+  ];
+  
+  for(const pattern of expensePatterns){
+    const match=t.match(pattern);
+    if(match){
+      const amount=extractAmount(match[2]+' '+(match[3]||''));
+      if(amount>0){
+        const categoryText=match[4]||'';
+        const category=extractCategoryFromText(categoryText);
+        const fund=extractFundFromText(categoryText)||inferFundFromCategory(category);
+        return{intent:'expense',amount,category,fund:fund||'rewards',categoryText};
+      }
+    }
+  }
+  
+  // INGRESOS GENERALES
+  const incomePatterns=[
+    /\b(agrega|añade|pon|deposita|ingresa|suma|anota|recibi|entro|dame|da|meter|meti|coloca|colocar)\b.*?(\d+(?:[.,]\d+)?|\bun\b|\buno\b|\bdos\b|\btres\b|\bcuatro\b|\bcinco\b|\bseis\b|\bsiete\b|\bocho\b|\bnueve\b|\bdiez\b|\bcien\b|\bmedio\b|\bmedia\b)\s*(dolar|dolares|\$|centavo|centavos)?/i,
+    /^(\d+(?:[.,]\d+)?)\s*(dolar|dolares|\$|centavo|centavos)?$/i
+  ];
+  
+  for(const pattern of incomePatterns){
+    const match=t.match(pattern);
+    if(match){
+      const amount=extractAmount(match[1]+' '+(match[2]||''));
+      if(amount>0)return{intent:'income',amount};
+    }
+  }
+  
+  // CONSULTAS
+  if(/\b(cuanto|cuanto|saldo|tengo|disponible|patrimonio|total|balance|queda|hay)\b/.test(t)&&
+     /dinero|tengo|saldo|disponible|hay|queda|fondo|ahorro|emergencia|ocio|transporte/.test(t)){
+    const fund=extractFundFromText(t);
     return{intent:'query_balance',fund};
   }
+  if(/\b(racha|dias seguidos|streak|seguidos|dias de racha)\b/.test(t))return{intent:'query_streak'};
+  if(/\b(estadisticas|stats|resumen|panorama|como voy|como esta|como ando|como me va)\b/.test(t))return{intent:'query_stats'};
+  if(/\b(salud financiera|score|puntuacion|que tan bien|como estoy financieramente)\b/.test(t))return{intent:'query_health'};
+  if(/\b(historial|movimientos|registros|ultimos|ultimo|ver gastos|ver ingresos|que gaste|que compre|que registre)\b/.test(t))return{intent:'query_history'};
   
-  // INTENT: Consulta racha
-  if(/(^|\b)(racha|dias seguidos|streak|seguidos)\b/.test(t)){
-    return{intent:'query_streak'};
+  // METAS
+  if(/\b(crear?|hacer|definir|nueva|nuevo|poner|establecer)\b.*\b(meta|objetivo|ahorrar para)\b/.test(t)){
+    const name=extractGoalName(t);
+    const amount=extractAmount(t);
+    return{intent:'create_goal',amount,name};
   }
   
-  // INTENT: Estadísticas
-  if(/(^|\b)(estadisticas|stats|resumen|panorama|como voy|como esta|como ando)\b/.test(t)){
-    return{intent:'query_stats'};
-  }
-  
-  // INTENT: Salud financiera
-  if(/(^|\b)(salud financiera|score|puntuacion|que tan bien|como estoy)\b/.test(t)){
-    return{intent:'query_health'};
-  }
-  
-  // INTENT: Crear meta
-  if(/(^|\b)(crear?|hacer|definir|nueva|nuevo)\b.*\b(meta|objetivo|ahorrar para)\b/.test(t)){
-    return{intent:'create_goal',amount,name:extractGoalName(t)};
-  }
-  
-  // INTENT: Historial
-  if(/(^|\b)(historial|movimientos|registros|ultimos|ultimo|ver gastos|ver ingresos)\b/.test(t)){
-    return{intent:'query_history'};
-  }
-  
-  // INTENT: Eliminar último
-  if(/(^|\b)(elimina|borra|quita|remueve)\b.*\b(ultimo|anterior|ultimo gasto|ultimo ingreso)\b/.test(t)){
-    const type=/gasto/.test(t)?'expense':'entry';
+  // ELIMINAR
+  if(/\b(elimina|borra|quita|remueve|cancela|anula)\b.*\b(ultimo|anterior|ultimo gasto|ultimo ingreso|ultima entrada)\b/.test(t)){
+    const type=/ingreso|entrada/.test(t)?'entry':'expense';
     return{intent:'delete_last',type};
   }
   
-  // INTENT: Configuración
-  if(/(^|\b)(cambia|pon|ajusta|configura|modifica|cambiar)\b.*\b(meta emergencia|idioma|moneda|distribucion|transporte)\b/.test(t)){
+  // CONFIGURACIÓN
+  if(/\b(cambia|pon|ajusta|configura|modifica|cambiar|establece|fija)\b.*\b(meta emergencia|idioma|moneda|distribucion|transporte|fijo)\b/.test(t)){
     return{intent:'config_change',text:t};
   }
   
-  // INTENT: Análisis
-  if(/(^|\b)(gastando mucho|ahorrando bien|que deber|recomiend|consejo|analisis|mejorar)\b/.test(t)){
-    return{intent:'analysis'};
-  }
+  // ANÁLISIS
+  if(/\b(gastando mucho|ahorrando bien|que deber|recomiend|consejo|analisis|mejorar|como mejorar)\b/.test(t))return{intent:'analysis'};
   
-  // INTENT: Ayuda
-  if(/(^|\b)(ayuda|help|que puedes|que sabes|como funcion|que haces)\b/.test(t)){
-    return{intent:'help'};
-  }
+  // AYUDA
+  if(/\b(ayuda|help|que puedes|que sabes|como funcion|que haces|comandos|opciones)\b/.test(t))return{intent:'help'};
   
-  // INTENT: Saludo
-  if(/(^|\b)(hola|buenas|hey|saludos|hi|hello)\b/.test(t)){
-    return{intent:'greeting'};
-  }
-  
-  // INTENT: Transferir
-  if(/(^|\b)(transfiere|mueve|pasa|transfier)\b/.test(t)&&amount>0){
-    const from=extractFund(t);
-    const to=extractFund(t,'to');
-    return{intent:'transfer',amount,from,to};
-  }
-  
-  // INTENT: Número suelto (probable ingreso)
-  if(/^\$?\d+(\.\d{1,2})?$/.test(t.trim())&&amount>0){
-    return{intent:'income',amount};
-  }
+  // SALUDO
+  if(/\b(hola|buenas|hey|saludos|hi|hello|buenos dias|buenas tardes|buenas noches)\b/.test(t))return{intent:'greeting'};
   
   return{intent:'unknown'};
 }
 
 function extractAmount(text){
-  // Números escritos
-  const words={'cero':0,'un':1,'uno':1,'dos':2,'tres':3,'cuatro':4,'cinco':5,'seis':6,'siete':7,'ocho':8,'nueve':9,'diez':10,'once':11,'doce':12,'trece':13,'catorce':14,'quince':15,'veinte':20,'treinta':30,'cuarenta':40,'cincuenta':50,'sesenta':60,'setenta':70,'ochenta':80,'noventa':90,'cien':100,'doscientos':200,'trescientos':300,'quinientos':500,'mil':1000};
-  
-  // Buscar $ primero
-  const dollarMatch=text.match(/\$?\s*(\d+(?:[.,]\d{1,2})?)/);
+  if(!text)return 0;
+  text=text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const words={'cero':0,'un':1,'uno':1,'dos':2,'tres':3,'cuatro':4,'cinco':5,'seis':6,'siete':7,'ocho':8,'nueve':9,'diez':10,'once':11,'doce':12,'trece':13,'catorce':14,'quince':15,'veinte':20,'treinta':30,'cuarenta':40,'cincuenta':50,'sesenta':60,'setenta':70,'ochenta':80,'noventa':90,'cien':100,'medio':0.5,'media':0.5,'doscientos':200,'trescientos':300,'quinientos':500,'mil':1000};
+  const dollarMatch=text.match(/\$\s*(\d+(?:[.,]\d{1,2})?)/);
   if(dollarMatch){
     let n=parseFloat(dollarMatch[1].replace(',','.'));
     if(/centavo/.test(text))n=n/100;
     return n;
   }
-  
-  // Buscar palabras
+  const numMatch=text.match(/(\d+(?:[.,]\d{1,2})?)/);
+  if(numMatch){
+    let n=parseFloat(numMatch[1].replace(',','.'));
+    if(/centavo/.test(text))n=n/100;
+    return n;
+  }
   for(const[w,v]of Object.entries(words)){
     const regex=new RegExp('\\b'+w+'\\b');
     if(regex.test(text)){
@@ -2575,42 +2574,52 @@ function extractAmount(text){
       return v;
     }
   }
-  
   return 0;
 }
 
-function extractCategory(text){
-  if(/comida|comer|almuerzo|cena|desayuno|restaurante/.test(text))return'🍔 Comida';
-  if(/juego|videojuego|game/.test(text))return'🎮 Juegos';
-  if(/ropa|camisa|pantalon|zapato/.test(text))return'👕 Ropa';
-  if(/tech|celular|computadora|audifono|cargador/.test(text))return'📱 Tech';
-  if(/pelicula|cine|netflix|serie|entretenimiento/.test(text))return'🎬 Entre';
-  if(/escuela|colegio|curso|libro|copia|copias/.test(text))return'📚 Escuela';
-  if(/snack|galleta|dulce|refresco|soda/.test(text))return'🍿 Snacks';
-  if(/bus|transporte|pasaje|taxi/.test(text))return'🚌 Transporte';
-  if(/medicina|doctor|farmacia|salud/.test(text))return'💊 Salud';
-  return'🎁 Otros';
-}
-
-function extractFund(text,mode){
-  if(/ahorro|ahorros/.test(text))return'savings';
-  if(/emergencia|emergenc/.test(text))return'emergency';
-  if(/ocio|gusto|antojo|libre/.test(text))return'rewards';
-  if(/transporte|bus/.test(text))return'transport';
+function extractFundFromText(text){
+  if(!text)return null;
+  text=text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  for(const[fund,keywords]of Object.entries(FUND_MAP)){
+    for(const kw of keywords){
+      if(text.includes(kw))return fund;
+    }
+  }
   return null;
 }
 
+function extractCategoryFromText(text){
+  if(!text)return'🎁 Otros';
+  text=text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  for(const[cat,keywords]of Object.entries(CATEGORY_MAP)){
+    for(const kw of keywords){
+      if(text.includes(kw))return cat;
+    }
+  }
+  return'🎁 Otros';
+}
+
+function inferFundFromCategory(category){
+  if(!category)return'rewards';
+  const cat=category.toLowerCase();
+  if(cat.includes('transporte')||cat.includes('bus'))return'transport';
+  if(cat.includes('escuela')||cat.includes('copias'))return'savings';
+  return'rewards';
+}
+
 function extractGoalName(text){
-  const m=text.match(/(?:para|llamad(?:a|o)|nombre)\s+(.+?)(?:\s+de|\s+por|\s+\$|$)/);
+  text=text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const m=text.match(/(?:para|llamad(?:a|o)|nombre|meta)\s+(.+?)(?:\s+de|\s+por|\s+\$|\s+con|\s+que|$)/);
   if(m)return m[1].trim();
   return null;
 }
 
-/* ═══ Ejecutor de intenciones ═══ */
 function executeIntent(intent,text){
   switch(intent.intent){
     case'income':handleIncome(intent);break;
+    case'direct_income':handleDirectIncome(intent);break;
     case'expense':handleExpense(intent);break;
+    case'transfer':handleTransfer(intent);break;
     case'query_balance':handleQueryBalance(intent);break;
     case'query_streak':handleQueryStreak();break;
     case'query_stats':handleQueryStats();break;
@@ -2622,7 +2631,8 @@ function executeIntent(intent,text){
     case'analysis':handleAnalysis();break;
     case'help':handleHelp();break;
     case'greeting':handleGreeting();break;
-    case'transfer':handleTransfer(intent);break;
+    case'confirm_yes':handleConfirmYes();break;
+    case'confirm_no':handleConfirmNo();break;
     default:handleUnknown();
   }
 }
@@ -2641,7 +2651,7 @@ function handleIncome(intent){
   sv('nexo_context',nexoState.context);
   
   let response='✅ Ingreso de <span class="nexo-amount">'+curr(amt)+'</span> registrado correctamente.<br><br>';
-  response+='📊 Distribución:<br>';
+  response+='📊 Distribución automática:<br>';
   if(dist.transport>0)response+='• 🚌 Transporte: <span class="nexo-amount">'+curr(dist.transport)+'</span><br>';
   response+='• 🐷 Ahorro: <span class="nexo-amount">'+curr(dist.savings)+'</span><br>';
   response+='• 🛡️ Emergencia: <span class="nexo-amount">'+curr(dist.emergency)+'</span><br>';
@@ -2655,9 +2665,22 @@ function handleIncome(intent){
   updateAll();
 }
 
+function handleDirectIncome(intent){
+  const amt=intent.amount;
+  const fund=intent.fund;
+  if(!amt||amt<=0){
+    addNexoMessage('ai','¿Cuánto deseas agregar a <strong>'+getFundName(fund)+'</strong>?');
+    return;
+  }
+  addMoney(amt,fund);
+  addNexoMessage('ai','✅ <span class="nexo-amount">'+curr(amt)+'</span> agregados directamente a <strong>'+getFundName(fund)+'</strong>.<br><br>💰 Saldo actual: <span class="nexo-amount">'+curr(funds[fund])+'</span>');
+  updateAll();
+}
+
 function handleExpense(intent){
   const amt=intent.amount;
   const cat=intent.category||'🎁 Otros';
+  let fund=intent.fund||inferFundFromCategory(cat);
   
   if(!amt||amt<=0){
     addNexoMessage('ai','¿Cuánto gastaste? Dime el monto, por ejemplo: <em>"gasté 2 dólares en comida"</em>.');
@@ -2666,23 +2689,21 @@ function handleExpense(intent){
     return;
   }
   
-  // Determinar fondo
-  let fund=intent.fund;
-  if(!fund){
-    if(/comida|almuerzo|cena|snack|gastos/.test(intent.category?.toLowerCase()||''))fund='rewards';
-    else if(/transporte|bus/.test(intent.category?.toLowerCase()||''))fund='transport';
-    else if(/escuela|copia|libro/.test(intent.category?.toLowerCase()||''))fund='savings';
-    else fund='rewards';
-  }
-  
   if((funds[fund]||0)<amt){
-    addNexoMessage('ai','❌ No tienes suficiente en <strong>'+getFundName(fund)+'</strong>. Disponible: <span class="nexo-amount">'+curr(funds[fund])+'</span>.');
+    const availableFunds=Object.entries(funds).filter(([f,b])=>b>=amt).map(([f])=>f);
+    if(availableFunds.length>0){
+      addNexoMessage('ai','❌ No tienes suficiente en <strong>'+getFundName(fund)+'</strong> (disponible: <span class="nexo-amount">'+curr(funds[fund])+'</span>).<br><br>Fondos con saldo suficiente:<br>'+availableFunds.map(f=>'• '+getFundEmoji(f)+' '+getFundName(f)+': <span class="nexo-amount">'+curr(funds[f])+'</span>').join('<br>')+'<br><br>¿De cuál fondo deseas descontar?');
+      nexoState.context.lastAction='awaiting_expense_fund';
+      nexoState.context.pendingExpense={amount:amt,category:cat};
+      sv('nexo_context',nexoState.context);
+      return;
+    }
+    addNexoMessage('ai','❌ No tienes saldo suficiente en ningún fondo para cubrir <span class="nexo-amount neg">'+curr(amt)+'</span>.');
     return;
   }
   
-  // Registrar gasto
   const now=Date.now();
-  expenses.push({id:now,ts:now,name:cat.split(' ')[1]||'Gasto',amount,category:cat,fund,date:new Date().toLocaleDateString()});
+  expenses.push({id:now,ts:now,name:cat.split(' ').slice(1).join(' ')||'Gasto',amount,category:cat,fund,date:new Date().toLocaleDateString()});
   sv('expenses',expenses);
   funds[fund]-=amt;
   sv('funds',funds);
@@ -2695,8 +2716,47 @@ function handleExpense(intent){
   nexoState.context.lastCategory=cat;
   sv('nexo_context',nexoState.context);
   
-  addNexoMessage('ai','✅ Gasto de <span class="nexo-amount neg">-'+curr(amt)+'</span> registrado en <strong>'+getFundName(fund)+'</strong> ('+cat+').');
+  addNexoMessage('ai','✅ Gasto registrado:<br><br>• Monto: <span class="nexo-amount neg">-'+curr(amt)+'</span><br>• Categoría: '+cat+'<br>• Fondo: '+getFundEmoji(fund)+' '+getFundName(fund)+'<br><br>💰 Saldo restante: <span class="nexo-amount">'+curr(funds[fund])+'</span>');
   addXP(2);
+  checkAchs();
+  updateAll();
+}
+
+function handleTransfer(intent){
+  const fromFund=intent.from;
+  const toFund=intent.to;
+  const isAll=intent.isAll;
+  
+  let amt;
+  if(isAll){
+    amt=funds[fromFund]||0;
+    if(amt<=0){
+      addNexoMessage('ai','❌ No hay saldo en <strong>'+getFundName(fromFund)+'</strong> para transferir.');
+      return;
+    }
+  }else{
+    amt=intent.amount;
+    if(!amt||amt<=0){
+      addNexoMessage('ai','¿Cuánto deseas transferir de <strong>'+getFundName(fromFund)+'</strong> a <strong>'+getFundName(toFund)+'</strong>?');
+      return;
+    }
+  }
+  
+  if((funds[fromFund]||0)<amt){
+    addNexoMessage('ai','❌ Saldo insuficiente en <strong>'+getFundName(fromFund)+'</strong>. Disponible: <span class="nexo-amount">'+curr(funds[fromFund])+'</span>.');
+    return;
+  }
+  
+  funds[fromFund]-=amt;
+  funds[toFund]=(funds[toFund]||0)+amt;
+  sv('funds',funds);
+  fundHistory.push({type:'transfer',from:fromFund,to:toFund,amount:amt,ts:Date.now()});
+  sv('fundHistory',fundHistory);
+  
+  const isAllText=isAll?' (saldo completo)':'';
+  addNexoMessage('ai','✅ Transferencia realizada'+isAllText+':<br><br>• De: '+getFundEmoji(fromFund)+' '+getFundName(fromFund)+'<br>• A: '+getFundEmoji(toFund)+' '+getFundName(toFund)+'<br>• Monto: <span class="nexo-amount">'+curr(amt)+'</span><br><br>💰 Saldos actualizados:<br>• '+getFundName(fromFund)+': <span class="nexo-amount">'+curr(funds[fromFund])+'</span><br>• '+getFundName(toFund)+': <span class="nexo-amount">'+curr(funds[toFund])+'</span>');
+  
+  addXP(5);
   checkAchs();
   updateAll();
 }
@@ -2704,7 +2764,7 @@ function handleExpense(intent){
 function handleQueryBalance(intent){
   const fund=intent.fund;
   if(fund){
-    addNexoMessage('ai','💰 Tienes <span class="nexo-amount">'+curr(funds[fund])+'</span> en <strong>'+getFundName(fund)+'</strong>.');
+    addNexoMessage('ai','💰 Tienes <span class="nexo-amount">'+curr(funds[fund])+'</span> en <strong>'+getFundEmoji(fund)+' '+getFundName(fund)+'</strong>.');
   }else{
     const total=getFundTotal();
     addNexoMessage('ai','💰 Tu patrimonio total es <span class="nexo-amount">'+curr(total)+'</span>.<br><br>📊 Desglose:<br>• 🐷 Ahorro: <span class="nexo-amount">'+curr(funds.savings)+'</span><br>• 🛡️ Emergencia: <span class="nexo-amount">'+curr(funds.emergency)+'</span><br>• 🎁 Ocio: <span class="nexo-amount">'+curr(funds.rewards)+'</span><br>• 🚌 Transporte: <span class="nexo-amount">'+curr(funds.transport)+'</span>');
@@ -2736,14 +2796,12 @@ function handleQueryHealth(){
 function handleCreateGoal(intent,text){
   const amt=intent.amount;
   const name=intent.name;
-  
   if(!name){
     addNexoMessage('ai','¿Cómo quieres llamar tu meta? Por ejemplo: <em>"crear meta laptop"</em>.');
     nexoState.context.lastAction='awaiting_goal_name';
     sv('nexo_context',nexoState.context);
     return;
   }
-  
   if(!amt||amt<=0){
     addNexoMessage('ai','¿Cuánto cuesta <strong>'+name+'</strong>? Dime el precio.');
     nexoState.context.lastAction='awaiting_goal_price';
@@ -2751,15 +2809,14 @@ function handleCreateGoal(intent,text){
     sv('nexo_context',nexoState.context);
     return;
   }
-  
   goals.push({id:Date.now(),name,price:amt,deadline:'',priority:false,completed:false,createdDate:new Date().toISOString()});
   sv('goals',goals);
   addXP(5);
   checkAchs();
   updateAll();
-  
-  const wks=Math.ceil(amt/(0.35*5));
-  addNexoMessage('ai','🎯 Meta <strong>'+name+'</strong> creada por <span class="nexo-amount">'+curr(amt)+'</span>.<br><br>Ahorrando $0.35/día, la alcanzarás en ~<strong>'+wks+' semanas</strong>. ¡Tú puedes! 💪');
+  const dailySav=cfg.dailyAmount*(cfg.fundPercents.savings/100);
+  const wks=dailySav>0?Math.ceil(amt/(dailySav*5)):0;
+  addNexoMessage('ai','🎯 Meta <strong>'+name+'</strong> creada por <span class="nexo-amount">'+curr(amt)+'</span>.<br><br>Ahorrando '+curr(dailySav)+'/día, la alcanzarás en ~<strong>'+wks+' semanas</strong>. ¡Tú puedes! 💪');
 }
 
 function handleQueryHistory(){
@@ -2773,11 +2830,7 @@ function handleDeleteLast(intent){
     const last=expenses[expenses.length-1];
     nexoState.pendingConfirm={type:'delete_expense',id:last.id};
     addNexoMessage('ai','⚠️ ¿Seguro que deseas eliminar el último gasto?<br><br><strong>'+last.name+'</strong> — <span class="nexo-amount neg">-'+curr(last.amount)+'</span><br><br><em>Responde "sí" para confirmar o "no" para cancelar.</em>');
-  }else if(expenses.length>0){
-    const last=expenses[expenses.length-1];
-    nexoState.pendingConfirm={type:'delete_expense',id:last.id};
-    addNexoMessage('ai','⚠️ ¿Seguro que deseas eliminar el último gasto?<br><br><strong>'+last.name+'</strong> — <span class="nexo-amount neg">-'+curr(last.amount)+'</span><br><br><em>Responde "sí" para confirmar o "no" para cancelar.</em>');
-  }else if(entries.length>0){
+  }else if(intent.type==='entry'&&entries.length>0){
     const last=entries[entries.length-1];
     nexoState.pendingConfirm={type:'delete_entry',id:last.id};
     addNexoMessage('ai','⚠️ ¿Seguro que deseas eliminar el último ingreso?<br><br><span class="nexo-amount">+'+curr(last.received)+'</span> — '+last.day+'<br><br><em>Responde "sí" para confirmar o "no" para cancelar.</em>');
@@ -2814,85 +2867,71 @@ function handleConfigChange(intent){
 }
 
 function handleAnalysis(){
-  const health=calcHealth();
   const total=getFundTotal();
   const spent=getExpenseTotal();
   const emergPct=cfg.emergGoal>0?(funds.emergency/cfg.emergGoal)*100:0;
-  
   let tips=[];
-  
-  if(emergPct<50)tips.push('🛡️ Tu fondo de emergencia está al '+emergPct.toFixed(0)+'%. Intenta llegar al menos al 50% para mayor seguridad.');
-  if(streak<3)tips.push('🔥 Mantén tu racha registrando ingresos cada día. La constancia es clave.');
-  if(spent>total*0.5&&total>0)tips.push('💸 Estás gastando más del 50% de tu patrimonio. Considera reducir gastos de ocio.');
+  if(emergPct<50)tips.push('🛡️ Tu fondo de emergencia está al '+emergPct.toFixed(0)+'%. Intenta llegar al menos al 50%.');
+  if(streak<3)tips.push('🔥 Mantén tu racha registrando ingresos cada día.');
+  if(spent>total*0.5&&total>0)tips.push('💸 Estás gastando más del 50% de tu patrimonio.');
   if(goals.length===0)tips.push('🎯 Define una meta de ahorro para mantener la motivación.');
-  if(entries.length<5)tips.push('📅 Registra tus ingresos con más frecuencia para tener mejor control.');
-  
-  if(tips.length===0){
-    tips.push('🌟 ¡Excelente! Tu situación financiera se ve muy bien. Sigue así.');
-  }
-  
+  if(entries.length<5)tips.push('📅 Registra tus ingresos con más frecuencia.');
+  if(tips.length===0)tips.push('🌟 ¡Excelente! Tu situación financiera se ve muy bien.');
   addNexoMessage('ai','🧠 <strong>Análisis personalizado:</strong><br><br>'+tips.map(t=>'• '+t).join('<br>'));
 }
 
 function handleHelp(){
-  addNexoMessage('ai','✨ <strong>Puedo ayudarte con:</strong><br><br>💵 <strong>Ingresos:</strong> "agrega 2 dólares"<br>🛒 <strong>Gastos:</strong> "gasté 1 dólar en comida"<br>💰 <strong>Consultas:</strong> "¿cuánto tengo?"<br>🔥 <strong>Racha:</strong> "¿cómo va mi racha?"<br>📊 <strong>Estadísticas:</strong> "muéstrame mis stats"<br>🎯 <strong>Metas:</strong> "crear meta laptop 100 dólares"<br>⚙️ <strong>Config:</strong> "cambia meta emergencia a 20"<br>🧠 <strong>Análisis:</strong> "¿estoy gastando mucho?"<br>🗑️ <strong>Eliminar:</strong> "elimina el último gasto"<br><br>También puedes <strong>usar el micrófono</strong> 🎤 para hablarme.');
+  addNexoMessage('ai','✨ <strong>Puedo ayudarte con:</strong><br><br>💵 <strong>Ingresos:</strong><br>• "agrega 2 dólares" (distribución automática)<br>• "agrega 2 dólares a ahorro" (directo a fondo)<br><br>🛒 <strong>Gastos:</strong><br>• "gasté 1 dólar en comida"<br>• "usé 50 centavos del transporte"<br><br>🔄 <strong>Transferencias:</strong><br>• "pasa 1 dólar de ahorro a emergencia"<br>• "mueve todo mi ocio a emergencia"<br><br>💰 <strong>Consultas:</strong><br>• "¿cuánto tengo?"<br>• "¿cómo va mi racha?"<br>• "muéstrame mis estadísticas"<br><br>🎯 <strong>Metas:</strong><br>• "crear meta laptop 100 dólares"<br><br>También puedes <strong>usar el micrófono</strong> 🎤 para hablarme.');
 }
 
 function handleGreeting(){
   const hour=new Date().getHours();
   let greeting=hour<12?'¡Buenos días':hour<19?'¡Buenas tardes':'¡Buenas noches';
   greeting+=' '+profile.name+'! 👋<br><br>';
-  
   const todayEntries=entries.filter(e=>new Date(e.ts).toDateString()===new Date().toDateString());
   if(todayEntries.length===0){
     greeting+='Aún no has registrado nada hoy. ¿Deseas anotar tu ingreso? 💵';
   }else{
     greeting+='Ya registraste '+todayEntries.length+' movimiento'+(todayEntries.length>1?'s':'')+' hoy. ¡Sigue así! 💪';
   }
-  
   addNexoMessage('ai',greeting);
 }
 
-function handleTransfer(intent){
-  addNexoMessage('ai','Para transferir fondos, usa el botón 🔄 "Transferir" en la pantalla principal. Es más seguro hacerlo desde allí para elegir los fondos correctamente.');
+function handleConfirmYes(){
+  if(!nexoState.pendingConfirm){
+    addNexoMessage('ai','No hay ninguna operación pendiente de confirmar.');
+    return;
+  }
+  const pc=nexoState.pendingConfirm;
+  nexoState.pendingConfirm=null;
+  if(pc.type==='delete_expense'){
+    const ex=expenses.find(x=>x.id===pc.id);
+    if(ex){
+      funds[ex.fund]=(funds[ex.fund]||0)+ex.amount;
+      sv('funds',funds);
+      expenses=expenses.filter(x=>x.id!==pc.id);
+      sv('expenses',expenses);
+      addNexoMessage('ai','✅ Gasto eliminado y saldo restaurado en <strong>'+getFundName(ex.fund)+'</strong>.');
+      updateAll();
+    }
+  }else if(pc.type==='delete_entry'){
+    delEntry(pc.id);
+    addNexoMessage('ai','✅ Ingreso eliminado.');
+  }
+}
+
+function handleConfirmNo(){
+  nexoState.pendingConfirm=null;
+  addNexoMessage('ai','✅ Operación cancelada.');
 }
 
 function handleUnknown(){
-  // Verificar confirmación pendiente
-  const t=nexoState.chat[nexoState.chat.length-1]?.html?.toLowerCase()||'';
-  const lastUser=nexoState.chat.filter(m=>m.role==='user').pop();
-  
-  if(nexoState.pendingConfirm){
-    const lastMsg=lastUser?.html?.toLowerCase()||'';
-    if(/^(si|sí|confirmar|ok|dale|adelante)$/.test(lastMsg.trim())){
-      const pc=nexoState.pendingConfirm;
-      nexoState.pendingConfirm=null;
-      if(pc.type==='delete_expense'){
-        const ex=expenses.find(x=>x.id===pc.id);
-        if(ex){
-          funds[ex.fund]=(funds[ex.fund]||0)+ex.amount;
-          sv('funds',funds);
-          expenses=expenses.filter(x=>x.id!==pc.id);
-          sv('expenses',expenses);
-          addNexoMessage('ai','✅ Gasto eliminado y saldo restaurado.');
-          updateAll();
-        }
-      }else if(pc.type==='delete_entry'){
-        delEntry(pc.id);
-        addNexoMessage('ai','✅ Ingreso eliminado.');
-      }
-      return;
-    }else if(/^(no|cancelar|cancel|nel)$/.test(lastMsg.trim())){
-      nexoState.pendingConfirm=null;
-      addNexoMessage('ai','✅ Operación cancelada.');
-      return;
-    }
-  }
-  
-  // Contexto
   const ctx=nexoState.context;
+  const lastUser=nexoState.chat.filter(m=>m.role==='user').pop();
+  const userText=lastUser?.html?.toLowerCase()||'';
+  
   if(ctx.lastAction==='awaiting_income_amount'){
-    const amt=extractAmount(lastUser?.html||'');
+    const amt=extractAmount(userText);
     if(amt>0){
       nexoState.context.lastAction=null;
       sv('nexo_context',nexoState.context);
@@ -2901,7 +2940,7 @@ function handleUnknown(){
     }
   }
   if(ctx.lastAction==='awaiting_expense_amount'){
-    const amt=extractAmount(lastUser?.html||'');
+    const amt=extractAmount(userText);
     if(amt>0){
       nexoState.context.lastAction=null;
       sv('nexo_context',nexoState.context);
@@ -2909,8 +2948,19 @@ function handleUnknown(){
       return;
     }
   }
+  if(ctx.lastAction==='awaiting_expense_fund'&&ctx.pendingExpense){
+    const fund=extractFundFromText(userText);
+    if(fund&&(funds[fund]||0)>=ctx.pendingExpense.amount){
+      const pe=ctx.pendingExpense;
+      nexoState.context.lastAction=null;
+      nexoState.context.pendingExpense=null;
+      sv('nexo_context',nexoState.context);
+      handleExpense({amount:pe.amount,category:pe.category,fund});
+      return;
+    }
+  }
   if(ctx.lastAction==='awaiting_goal_price'&&ctx.pendingGoalName){
-    const amt=extractAmount(lastUser?.html||'');
+    const amt=extractAmount(userText);
     if(amt>0){
       const name=ctx.pendingGoalName;
       nexoState.context.lastAction=null;
@@ -2926,11 +2976,15 @@ function handleUnknown(){
     }
   }
   
-  addNexoMessage('ai','🤔 No entendí bien. Puedes decir cosas como:<br>• "agrega 2 dólares"<br>• "gasté 1 dólar en comida"<br>• "¿cuánto tengo?"<br>• "ayuda" para ver todas las opciones.');
+  addNexoMessage('ai','🤔 No entendí bien. Puedes decir cosas como:<br>• "agrega 2 dólares"<br>• "agrega 2 dólares a ahorro"<br>• "gasté 1 dólar en comida"<br>• "pasa 1 dólar de ahorro a emergencia"<br>• "¿cuánto tengo?"<br>• "ayuda" para ver todas las opciones.');
 }
 
 function getFundName(f){
   return{savings:'Ahorro',emergency:'Emergencia',rewards:'Ocio',transport:'Transporte'}[f]||f;
+}
+
+function getFundEmoji(f){
+  return{savings:'🐷',emergency:'🛡️',rewards:'🎁',transport:'🚌'}[f]||'💰';
 }
 
 /* ═══ Sistema de voz ═══ */
@@ -2945,42 +2999,31 @@ function startNexoVoice(){
     showToast('Tu navegador no soporta voz ❌','e');
     return;
   }
-  
   try{
     nexoState.recognition=new SpeechRecognition();
     nexoState.recognition.lang=cfg.lang==='es'?'es-ES':cfg.lang==='en'?'en-US':cfg.lang==='fr'?'fr-FR':'pt-BR';
     nexoState.recognition.continuous=false;
     nexoState.recognition.interimResults=true;
-    
     nexoState.recognition.onstart=()=>{
       nexoState.listening=true;
       document.getElementById('nexoMicBtn').classList.add('listening');
-      const inp=document.getElementById('nexoInput');
-      inp.placeholder='🎤 Escuchando...';
+      document.getElementById('nexoInput').placeholder='🎤 Escuchando...';
     };
-    
     nexoState.recognition.onresult=e=>{
       let transcript='';
       for(let i=e.resultIndex;i<e.results.length;i++){
         transcript+=e.results[i][0].transcript;
       }
       document.getElementById('nexoInput').value=transcript;
-      if(e.results[e.results.length-1].isFinal){
-        setTimeout(()=>sendNexoMsg(),300);
-      }
+      if(e.results[e.results.length-1].isFinal)setTimeout(()=>sendNexoMsg(),300);
     };
-    
     nexoState.recognition.onerror=e=>{
-      console.error('Speech error:',e.error);
       stopNexoVoice();
       if(e.error!=='no-speech')showToast('Error de voz: '+e.error,'e');
     };
-    
     nexoState.recognition.onend=()=>stopNexoVoice();
-    
     nexoState.recognition.start();
   }catch(err){
-    console.error(err);
     showToast('Error al iniciar voz ❌','e');
     stopNexoVoice();
   }
@@ -2996,29 +3039,16 @@ function stopNexoVoice(){
   }
 }
 
-/* ═══ Notificaciones inteligentes de Nexo ═══ */
+/* ═══ Notificaciones inteligentes ═══ */
 function nexoSmartNotification(){
   const today=new Date().toDateString();
   const todayEntries=entries.filter(e=>new Date(e.ts).toDateString()===today);
-  
   let notify=false;
-  let msg='';
-  
-  if(todayEntries.length===0&&new Date().getHours()>=18){
-    msg='💡 Aún no has registrado tu ingreso de hoy.';
-    notify=true;
-  }else if(streak>=2&&new Date().getHours()>=20&&todayEntries.length===0){
-    msg='🔥 ¡Tu racha está en riesgo! Registra tu ingreso antes de que termine el día.';
-    notify=true;
-  }else if(funds.emergency>0&&funds.emergency<cfg.emergGoal&&(cfg.emergGoal-funds.emergency)<0.50){
-    msg='💪 ¡Te faltan '+curr(cfg.emergGoal-funds.emergency)+' para completar tu fondo de emergencia!';
-    notify=true;
-  }
-  
+  if(todayEntries.length===0&&new Date().getHours()>=18)notify=true;
+  else if(streak>=2&&new Date().getHours()>=20&&todayEntries.length===0)notify=true;
+  else if(funds.emergency>0&&funds.emergency<cfg.emergGoal&&(cfg.emergGoal-funds.emergency)<0.50)notify=true;
   if(notify){
-    const btn=document.getElementById('nexoBtn');
-    btn.classList.add('has-notif');
-    nexoState.pendingNotification=msg;
+    document.getElementById('nexoBtn').classList.add('has-notif');
   }
 }
 
@@ -3036,7 +3066,6 @@ window.addEventListener('load',()=>{
     setTimeout(()=>bar.style.width='65%',200);
     setTimeout(()=>bar.style.width='100%',750);
   }
-  
   setTimeout(()=>{
     const s=document.getElementById('splash');
     s.classList.add('hide');
@@ -3048,14 +3077,8 @@ window.addEventListener('load',()=>{
   
   document.getElementById('histSearchInp').addEventListener('input',e=>{histSearch=e.target.value;updateAll()});
   
-  // Inicializar Nexo AI
-  initNexoPosition();
-  initNexoDrag();
-  
   // Notificación inteligente después de 5s
   setTimeout(nexoSmartNotification,5000);
-  
-  // Verificar notificaciones cada minuto
   setInterval(nexoSmartNotification,60000);
 });
 
