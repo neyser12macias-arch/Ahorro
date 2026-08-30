@@ -270,16 +270,24 @@ select.inp option{background:var(--bg2);color:var(--text)}
 .week-stat.saved .week-stat-ic{background:var(--vd);color:var(--v)}
 .week-stat.saved .week-stat-val{color:var(--v)}
 
-.budget-card{background:var(--card);border:1px solid var(--b);border-radius:var(--rad);padding:16px;margin-bottom:12px;position:relative;overflow:hidden;transition:0.3s}
+.budget-card{background:var(--card);border:1px solid var(--b);border-radius:var(--rad);padding:16px;margin-bottom:12px;position:relative;overflow:hidden;transition:0.3s;touch-action:pan-y}
 .budget-card.warn{border-color:rgba(255,149,0,0.3);background:linear-gradient(135deg,rgba(255,149,0,0.08),var(--card));animation:warnPulse 2s ease-in-out infinite}
 .budget-card.danger{border-color:rgba(255,59,48,0.3);background:linear-gradient(135deg,rgba(255,59,48,0.08),var(--card));animation:dangerPulse 2s ease-in-out infinite}
 .budget-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
 .budget-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;letter-spacing:-0.2px}
 .budget-title svg{width:18px;height:18px}
-.budget-edit-btn{width:30px;height:30px;border-radius:8px;background:var(--b);border:none;color:var(--m);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.2s}
+.budget-dots{display:flex;align-items:center;gap:5px;cursor:pointer}
+.budget-dot{width:6px;height:6px;border-radius:999px;background:rgba(255,255,255,0.22);border:none;padding:0;cursor:pointer;transition:all 0.25s var(--ease-spring)}
+.theme-light .budget-dot{background:rgba(0,0,0,0.2)}
+.budget-dot.active{width:16px;background:var(--g);box-shadow:0 0 8px rgba(52,199,89,0.5)}
+.budget-edit-btn{width:30px;height:30px;border-radius:8px;background:var(--b);border:none;color:var(--m);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.2s;flex-shrink:0}
 .budget-edit-btn:hover{color:var(--text);background:var(--b2)}
 .budget-edit-btn:active{transform:scale(0.9)}
 .budget-edit-btn svg{width:14px;height:14px}
+.budget-stack-viewport{overflow:hidden;width:100%;touch-action:pan-y;position:relative;user-select:none;-webkit-user-select:none;cursor:grab}
+.budget-stack-viewport:active{cursor:grabbing}
+.budget-stack-track{display:flex;width:100%;transition:transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);will-change:transform}
+.budget-slide{flex:0 0 100%;width:100%;min-width:100%}
 .budget-bar-wrap{margin-bottom:10px}
 .budget-bar{width:100%;height:12px;background:rgba(120,120,128,0.16);border-radius:999px;overflow:hidden;position:relative}
 .budget-bar-fill{height:100%;border-radius:999px;transition:width 0.8s var(--ease-spring);position:relative;overflow:hidden}
@@ -694,15 +702,15 @@ select.inp option{background:var(--bg2);color:var(--text)}
 </div>
 </div>
 
-<!-- Modal Presupuesto Semanal -->
+<!-- Modal Presupuesto -->
 <div class="mo" id="budgetModal" onclick="if(event.target===this)closeModal('budgetModal')">
 <div class="mb">
 <div class="modal-header">
-<div class="modal-header-title" data-i18n="weeklyBudget">💰 Presupuesto Semanal</div>
+<div class="modal-header-title" id="budgetModalTitle" data-i18n="weeklyBudget">💰 Presupuesto Semanal</div>
 <button class="modal-close-btn" onclick="closeModal('budgetModal')" aria-label="Cerrar">✕</button>
 </div>
 <div class="mb-body">
-<div class="modal-subtitle" data-i18n="budgetDesc">Define cuánto puedes gastar esta semana</div>
+<div class="modal-subtitle" id="budgetModalDesc" data-i18n="budgetDesc">Define cuánto puedes gastar esta semana</div>
 <div class="iw"><span class="ip">$</span><input type="number" class="inp big" id="budgetInput" placeholder="50.00" step="1" min="0"></div>
 <div style="background:var(--cd);border:1px solid rgba(0,122,255,0.15);border-radius:var(--radxs);padding:12px;font-size:12px;color:var(--text);opacity:0.9;line-height:1.5;margin-bottom:14px">
 💡 <span data-i18n="budgetTip">Un buen presupuesto semanal te ayuda a controlar tus gastos y ahorrar más.</span>
@@ -1091,17 +1099,27 @@ select.inp option{background:var(--bg2);color:var(--text)}
 <button class="qab" onclick="openWeekHistoryModal()">📅 <span data-i18n="weekHistory">Historial</span></button>
 </div>
 
-<!-- Control de presupuesto semanal -->
+<!-- Control de presupuesto (Widget Stack: Semanal, Quincenal, Mensual, Anual) -->
 <div class="budget-card" id="budgetCard">
 <div class="budget-head">
-<div class="budget-title">
+<div class="budget-title" id="budgetTitle">
 <svg viewBox="0 0 24 24" fill="none" stroke="var(--o)" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-<span data-i18n="weeklyBudget">Presupuesto semanal</span>
+<span id="budgetTitleText" data-i18n="weeklyBudget">Presupuesto semanal</span>
+</div>
+<div class="budget-dots" id="budgetDots">
+<button class="budget-dot active" onclick="setBudgetPeriod(0)" aria-label="Presupuesto Semanal"></button>
+<button class="budget-dot" onclick="setBudgetPeriod(1)" aria-label="Presupuesto Quincenal"></button>
+<button class="budget-dot" onclick="setBudgetPeriod(2)" aria-label="Presupuesto Mensual"></button>
+<button class="budget-dot" onclick="setBudgetPeriod(3)" aria-label="Presupuesto Anual"></button>
 </div>
 <button class="budget-edit-btn" onclick="openBudgetModal()" aria-label="Editar presupuesto">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
 </button>
 </div>
+<div class="budget-stack-viewport" id="budgetStackViewport">
+<div class="budget-stack-track" id="budgetStackTrack">
+<!-- Slide 0: Semanal -->
+<div class="budget-slide" data-period="weekly">
 <div class="budget-bar-wrap">
 <div class="budget-bar">
 <div class="budget-bar-fill ok" id="budgetBarFill" style="width:0%"><div class="sh"></div></div>
@@ -1112,8 +1130,59 @@ select.inp option{background:var(--bg2);color:var(--text)}
 <span><span data-i18n="budget">Presupuesto</span>: <span class="val" id="budgetTotal">$0.00</span></span>
 </div>
 <div class="budget-alert ok" id="budgetAlert">
-<span>✅</span>
+<span class="budget-alert-icon" id="budgetAlertIcon_0">✅</span>
 <span id="budgetAlertText" data-i18n="budgetOk">Dentro del presupuesto</span>
+</div>
+</div>
+<!-- Slide 1: Quincenal -->
+<div class="budget-slide" data-period="biweekly">
+<div class="budget-bar-wrap">
+<div class="budget-bar">
+<div class="budget-bar-fill ok" id="budgetBarFill_1" style="width:0%"><div class="sh"></div></div>
+</div>
+</div>
+<div class="budget-stats">
+<span><span data-i18n="spent">Gastado</span>: <span class="val" id="budgetSpent_1">$0.00</span></span>
+<span><span data-i18n="budget">Presupuesto</span>: <span class="val" id="budgetTotal_1">$0.00</span></span>
+</div>
+<div class="budget-alert ok" id="budgetAlert_1">
+<span class="budget-alert-icon" id="budgetAlertIcon_1">✅</span>
+<span id="budgetAlertText_1" data-i18n="budgetOk">Dentro del presupuesto</span>
+</div>
+</div>
+<!-- Slide 2: Mensual -->
+<div class="budget-slide" data-period="monthly">
+<div class="budget-bar-wrap">
+<div class="budget-bar">
+<div class="budget-bar-fill ok" id="budgetBarFill_2" style="width:0%"><div class="sh"></div></div>
+</div>
+</div>
+<div class="budget-stats">
+<span><span data-i18n="spent">Gastado</span>: <span class="val" id="budgetSpent_2">$0.00</span></span>
+<span><span data-i18n="budget">Presupuesto</span>: <span class="val" id="budgetTotal_2">$0.00</span></span>
+</div>
+<div class="budget-alert ok" id="budgetAlert_2">
+<span class="budget-alert-icon" id="budgetAlertIcon_2">✅</span>
+<span id="budgetAlertText_2" data-i18n="budgetOk">Dentro del presupuesto</span>
+</div>
+</div>
+<!-- Slide 3: Anual -->
+<div class="budget-slide" data-period="annual">
+<div class="budget-bar-wrap">
+<div class="budget-bar">
+<div class="budget-bar-fill ok" id="budgetBarFill_3" style="width:0%"><div class="sh"></div></div>
+</div>
+</div>
+<div class="budget-stats">
+<span><span data-i18n="spent">Gastado</span>: <span class="val" id="budgetSpent_3">$0.00</span></span>
+<span><span data-i18n="budget">Presupuesto</span>: <span class="val" id="budgetTotal_3">$0.00</span></span>
+</div>
+<div class="budget-alert ok" id="budgetAlert_3">
+<span class="budget-alert-icon" id="budgetAlertIcon_3">✅</span>
+<span id="budgetAlertText_3" data-i18n="budgetOk">Dentro del presupuesto</span>
+</div>
+</div>
+</div>
 </div>
 </div>
 
@@ -1574,7 +1643,8 @@ confirmDelExp:'¿Eliminar este gasto? El dinero se devolverá al fondo.',
 confirmDelEntry:'¿Eliminar este registro?',
 goalCompleted:'¡Meta completada!',canBuy:'¡Puedes comprar',
 fundComplete:'¡Fondo completo!',
-weekly:'SEMANAL',weeklyBudget:'💰 Presupuesto Semanal',budgetDesc:'Define cuánto puedes gastar esta semana',
+weekly:'SEMANAL',weeklyBudget:'💰 Presupuesto Semanal',biweeklyBudget:'💰 Presupuesto Quincenal',monthlyBudget:'💰 Presupuesto Mensual',annualBudget:'💰 Presupuesto Anual',
+budgetDesc:'Define cuánto puedes gastar esta semana',budgetDescWeekly:'Define cuánto puedes gastar esta semana',budgetDescBiweekly:'Define cuánto puedes gastar esta quincena',budgetDescMonthly:'Define cuánto puedes gastar este mes',budgetDescAnnual:'Define cuánto puedes gastar este año',
 budgetTip:'Un buen presupuesto semanal te ayuda a controlar tus gastos y ahorrar más.',
 budget:'Presupuesto',budgetOk:'Dentro del presupuesto',budgetWarn:'Te estás acercando al límite',
 budgetOver:'¡Presupuesto excedido!',budgetRemaining:'Te quedan',budgetOverBy:'Te excediste por',
@@ -1667,7 +1737,8 @@ confirmDelExp:'Delete this expense? Money will be returned to the fund.',
 confirmDelEntry:'Delete this record?',
 goalCompleted:'Goal completed!',canBuy:'You can buy',
 fundComplete:'Fund complete!',
-weekly:'WEEKLY',weeklyBudget:'💰 Weekly Budget',budgetDesc:'Define how much you can spend this week',
+weekly:'WEEKLY',weeklyBudget:'💰 Weekly Budget',biweeklyBudget:'💰 Bi-weekly Budget',monthlyBudget:'💰 Monthly Budget',annualBudget:'💰 Annual Budget',
+budgetDesc:'Define how much you can spend this week',budgetDescWeekly:'Define how much you can spend this week',budgetDescBiweekly:'Define how much you can spend this fortnight',budgetDescMonthly:'Define how much you can spend this month',budgetDescAnnual:'Define how much you can spend this year',
 budgetTip:'A good weekly budget helps you control spending and save more.',
 budget:'Budget',budgetOk:'Within budget',budgetWarn:'Getting close to the limit',
 budgetOver:'Budget exceeded!',budgetRemaining:'You have left',budgetOverBy:'You exceeded by',
@@ -1729,7 +1800,8 @@ noData:'Pas de données',mon:'Lun',tue:'Mar',wed:'Mer',thu:'Jeu',fri:'Ven',sat:'
 excellent:'Excellent 🌟',good:'Bon',regular:'Régulier',improvable:'Améliorable',start:'Début',
 confirmDelete:'Supprimer?',confirmReset:'Tout supprimer?',confirmDelExp:'Supprimer dépense?',confirmDelEntry:'Supprimer?',
 goalCompleted:'Objectif atteint!',canBuy:'Tu peux acheter',fundComplete:'Fonds complet!',
-weekly:'HEBDOMADAIRE',weeklyBudget:'💰 Budget Hebdo',budgetDesc:'Définis ton budget de la semaine',
+weekly:'HEBDOMADAIRE',weeklyBudget:'💰 Budget Hebdo',biweeklyBudget:'💰 Budget Bimensuel',monthlyBudget:'💰 Budget Mensuel',annualBudget:'💰 Budget Annuel',
+budgetDesc:'Définis ton budget de la semaine',budgetDescWeekly:'Définis ton budget de la semaine',budgetDescBiweekly:'Définis ton budget pour 15 jours',budgetDescMonthly:'Définis ton budget du mois',budgetDescAnnual:'Définis ton budget de l\'année',
 budgetTip:'Un bon budget hebdo aide à contrôler les dépenses.',budget:'Budget',budgetOk:'Dans le budget',
 budgetWarn:'Proche de la limite',budgetOver:'Budget dépassé!',budgetRemaining:'Il te reste',budgetOverBy:'Dépassé de',
 notSet:'Non défini',weekHistory:'Historique',weekHistoryDesc:'Compare tes semaines',
@@ -1788,7 +1860,8 @@ noData:'Sem dados',mon:'Seg',tue:'Ter',wed:'Qua',thu:'Qui',fri:'Sex',sat:'Sáb',
 excellent:'Excelente 🌟',good:'Bom',regular:'Regular',improvable:'Melhorável',start:'Início',
 confirmDelete:'Excluir?',confirmReset:'Apagar tudo?',confirmDelExp:'Excluir despesa?',confirmDelEntry:'Excluir?',
 goalCompleted:'Meta concluída!',canBuy:'Pode comprar',fundComplete:'Fundo completo!',
-weekly:'SEMANAL',weeklyBudget:'💰 Orçamento Semanal',budgetDesc:'Defina quanto pode gastar esta semana',
+weekly:'SEMANAL',weeklyBudget:'💰 Orçamento Semanal',biweeklyBudget:'💰 Orçamento Quinzenal',monthlyBudget:'💰 Orçamento Mensal',annualBudget:'💰 Orçamento Anual',
+budgetDesc:'Defina quanto pode gastar esta semana',budgetDescWeekly:'Defina quanto pode gastar esta semana',budgetDescBiweekly:'Defina quanto pode gastar esta quinzena',budgetDescMonthly:'Defina quanto pode gastar este mês',budgetDescAnnual:'Defina quanto pode gastar este ano',
 budgetTip:'Um bom orçamento semanal ajuda a controlar gastos.',budget:'Orçamento',budgetOk:'Dentro do orçamento',
 budgetWarn:'Perto do limite',budgetOver:'Orçamento excedido!',budgetRemaining:'Restam',budgetOverBy:'Excedeu em',
 notSet:'Não definido',weekHistory:'Histórico',weekHistoryDesc:'Compare suas semanas',
@@ -1813,7 +1886,8 @@ const DEFAULT_CATS = [
 const ICONS = ['🍔','🏠','🚗','🎓','💰','🎮','🛡️','✈️','🏥','📱','💻','🎯','🎒','🎧','📚','🎨','🎭','🎪','⚽','🎢','🎠','🎡','🎸','🏆','🥇','🥈','🎖️','🏵️','🌟','⭐','✨','💍','👑','🎁','🎀','🎊','🎉','🎈'];
 const COLORS = ['#34C759','#007AFF','#AF52DE','#FF2D55','#FF9500','#FFCC00','#FF3B30','#5856D6','#00C7BE','#D2C3F6','#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#FFEAA7','#DDA0DD','#85C1E9','#82E0AA','#F8C471','#F1948A'];
 
-let cfg = ld('cfg', { dailyAmount: 1.00, currency: '$', lang: 'es', theme: 'dark', weeklyBudget: 0 });
+let cfg = ld('cfg', { dailyAmount: 1.00, currency: '$', lang: 'es', theme: 'dark', weeklyBudget: 0, biweeklyBudget: 0, monthlyBudget: 0, annualBudget: 0 });
+let currentBudgetIndex = 0; // 0: Semanal, 1: Quincenal, 2: Mensual, 3: Anual
 lang = cfg.lang || 'es';
 let entries = ld('entries', []);
 let expenses = ld('expenses', []);
@@ -2004,58 +2078,255 @@ el('wkSaved').style.color = summary.saved < 0 ? 'var(--r)' : 'var(--v)';
 if (el('wkSavedSub')) el('wkSavedSub').textContent = t('received') + ' - ' + t('spent');
 }
 
+// ===== WIDGET STACK: PRESUPUESTOS =====
+const BUDGET_PERIODS = ['weekly', 'biweekly', 'monthly', 'annual'];
+const BUDGET_CONFIG_KEYS = ['weeklyBudget', 'biweeklyBudget', 'monthlyBudget', 'annualBudget'];
+const BUDGET_TITLES = ['weeklyBudget', 'biweeklyBudget', 'monthlyBudget', 'annualBudget'];
+const BUDGET_DESCS = ['budgetDescWeekly', 'budgetDescBiweekly', 'budgetDescMonthly', 'budgetDescAnnual'];
+
+function getPeriodDateRange(period) {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = now.getMonth();
+    const d = now.getDate();
+
+    if (period === 'weekly') {
+        const viewDate = getViewingWeekDate();
+        const start = getWeekStart(viewDate);
+        const end = getWeekEnd(viewDate);
+        return { start: start.getTime(), end: end.getTime() };
+    } else if (period === 'biweekly') {
+        let start, end;
+        if (d <= 15) {
+            start = new Date(y, m, 1, 0, 0, 0, 0);
+            end = new Date(y, m, 15, 23, 59, 59, 999);
+        } else {
+            start = new Date(y, m, 16, 0, 0, 0, 0);
+            end = new Date(y, m + 1, 0, 23, 59, 59, 999);
+        }
+        return { start: start.getTime(), end: end.getTime() };
+    } else if (period === 'monthly') {
+        const start = new Date(y, m, 1, 0, 0, 0, 0);
+        const end = new Date(y, m + 1, 0, 23, 59, 59, 999);
+        return { start: start.getTime(), end: end.getTime() };
+    } else if (period === 'annual') {
+        const start = new Date(y, 0, 1, 0, 0, 0, 0);
+        const end = new Date(y, 11, 31, 23, 59, 59, 999);
+        return { start: start.getTime(), end: end.getTime() };
+    }
+    return { start: 0, end: Infinity };
+}
+
+function getPeriodExpenses(period) {
+    const range = getPeriodDateRange(period);
+    return expenses.filter(e => e.ts >= range.start && e.ts <= range.end);
+}
+
+function getPeriodBudgetSummary(periodIndex) {
+    const period = BUDGET_PERIODS[periodIndex];
+    const periodExp = getPeriodExpenses(period);
+    const spent = periodExp.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+    const budgetKey = BUDGET_CONFIG_KEYS[periodIndex];
+    const budget = Number(cfg[budgetKey]) || (periodIndex === 0 ? Number(cfg.weeklyBudget) || 0 : 0);
+    const remaining = budget > 0 ? budget - spent : 0;
+    const overBy = budget > 0 && spent > budget ? spent - budget : 0;
+    const pct = budget > 0 ? (spent / budget) * 100 : 0;
+    return { period, spent, budget, remaining, overBy, pct };
+}
+
+function setBudgetPeriod(index, animated = true) {
+    if (index < 0) index = 0;
+    if (index > 3) index = 3;
+    currentBudgetIndex = index;
+
+    const track = document.getElementById('budgetStackTrack');
+    if (track) {
+        track.style.transition = animated ? 'transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)' : 'none';
+        track.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    const titleText = document.getElementById('budgetTitleText');
+    if (titleText) {
+        titleText.textContent = t(BUDGET_TITLES[index]);
+        titleText.setAttribute('data-i18n', BUDGET_TITLES[index]);
+    }
+
+    const dots = document.querySelectorAll('#budgetDots .budget-dot');
+    dots.forEach((d, i) => {
+        d.classList.toggle('active', i === index);
+    });
+
+    const activeSummary = getPeriodBudgetSummary(index);
+    const card = document.getElementById('budgetCard');
+    if (card) {
+        if (activeSummary.budget > 0) {
+            if (activeSummary.pct >= 100) card.className = 'budget-card danger';
+            else if (activeSummary.pct >= 75) card.className = 'budget-card warn';
+            else card.className = 'budget-card';
+        } else {
+            card.className = 'budget-card';
+        }
+    }
+}
+
 function renderBudgetCard() {
-const viewDate = getViewingWeekDate();
-const summary = getWeekSummary(viewDate);
-const card = document.getElementById('budgetCard');
-const fill = document.getElementById('budgetBarFill');
-const spentEl = document.getElementById('budgetSpent');
-const totalEl = document.getElementById('budgetTotal');
-const alertEl = document.getElementById('budgetAlert');
-const alertText = document.getElementById('budgetAlertText');
-if (!card) return;
-const budget = summary.budget;
-if (budget <= 0) {
-card.className = 'budget-card';
-if (fill) fill.style.width = '0%';
-if (spentEl) spentEl.textContent = curr(summary.spent);
-if (totalEl) totalEl.textContent = t('notSet');
-if (alertEl) {
-alertEl.className = 'budget-alert ok';
-alertText.textContent = t('budgetDesc');
+    const card = document.getElementById('budgetCard');
+    if (!card) return;
+
+    for (let i = 0; i < 4; i++) {
+        const summary = getPeriodBudgetSummary(i);
+        const fill = document.getElementById(i === 0 ? 'budgetBarFill' : 'budgetBarFill_' + i);
+        const spentEl = document.getElementById(i === 0 ? 'budgetSpent' : 'budgetSpent_' + i);
+        const totalEl = document.getElementById(i === 0 ? 'budgetTotal' : 'budgetTotal_' + i);
+        const alertEl = document.getElementById(i === 0 ? 'budgetAlert' : 'budgetAlert_' + i);
+        const alertText = document.getElementById(i === 0 ? 'budgetAlertText' : 'budgetAlertText_' + i);
+        const alertIcon = document.getElementById('budgetAlertIcon_' + i);
+
+        if (spentEl) spentEl.textContent = curr(summary.spent);
+
+        if (summary.budget <= 0) {
+            if (fill) {
+                fill.style.width = '0%';
+                fill.className = 'budget-bar-fill ok';
+            }
+            if (totalEl) totalEl.textContent = t('notSet');
+            if (alertEl) alertEl.className = 'budget-alert ok';
+            if (alertIcon) alertIcon.textContent = '💡';
+            if (alertText) alertText.textContent = t(BUDGET_DESCS[i]) || t('budgetDesc');
+        } else {
+            if (totalEl) totalEl.textContent = curr(summary.budget);
+            if (fill) {
+                fill.style.width = Math.min(summary.pct, 100) + '%';
+                if (summary.pct >= 100) fill.className = 'budget-bar-fill danger';
+                else if (summary.pct >= 75) fill.className = 'budget-bar-fill warn';
+                else fill.className = 'budget-bar-fill ok';
+            }
+            if (alertEl && alertText) {
+                if (summary.pct >= 100) {
+                    alertEl.className = 'budget-alert danger';
+                    if (alertIcon) alertIcon.textContent = '⚠️';
+                    alertText.textContent = '⚠️ ' + t('budgetOver') + ' ' + t('budgetOverBy') + ' ' + curr(summary.overBy);
+                } else if (summary.pct >= 75) {
+                    alertEl.className = 'budget-alert warn';
+                    if (alertIcon) alertIcon.textContent = '⚠️';
+                    alertText.textContent = '⚠️ ' + t('budgetWarn') + ' — ' + t('budgetRemaining') + ' ' + curr(summary.remaining);
+                } else {
+                    alertEl.className = 'budget-alert ok';
+                    if (alertIcon) alertIcon.textContent = '✅';
+                    alertText.textContent = '✅ ' + t('budgetOk') + ' — ' + t('budgetRemaining') + ' ' + curr(summary.remaining);
+                }
+            }
+        }
+    }
+
+    setBudgetPeriod(currentBudgetIndex, false);
 }
-return;
-}
-const pct = Math.min((summary.spent / budget) * 100, 150);
-const remaining = budget - summary.spent;
-const overBy = summary.spent - budget;
-if (spentEl) spentEl.textContent = curr(summary.spent);
-if (totalEl) totalEl.textContent = curr(budget);
-if (fill) {
-fill.style.width = Math.min(pct, 100) + '%';
-if (pct >= 100) {
-fill.className = 'budget-bar-fill danger';
-card.className = 'budget-card danger';
-} else if (pct >= 75) {
-fill.className = 'budget-bar-fill warn';
-card.className = 'budget-card warn';
-} else {
-fill.className = 'budget-bar-fill ok';
-card.className = 'budget-card';
-}
-}
-if (alertEl && alertText) {
-if (pct >= 100) {
-alertEl.className = 'budget-alert danger';
-alertText.textContent = '⚠️ ' + t('budgetOver') + ' ' + t('budgetOverBy') + ' ' + curr(overBy);
-} else if (pct >= 75) {
-alertEl.className = 'budget-alert warn';
-alertText.textContent = '⚠️ ' + t('budgetWarn') + ' — ' + t('budgetRemaining') + ' ' + curr(remaining);
-} else {
-alertEl.className = 'budget-alert ok';
-alertText.textContent = '✅ ' + t('budgetOk') + ' — ' + t('budgetRemaining') + ' ' + curr(remaining);
-}
-}
+
+let budgetStackInitialized = false;
+function initBudgetWidgetStack() {
+    const viewport = document.getElementById('budgetStackViewport');
+    const track = document.getElementById('budgetStackTrack');
+    if (!viewport || !track || budgetStackInitialized) return;
+    budgetStackInitialized = true;
+
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let startTime = 0;
+    let isTouching = false;
+    let isSwiping = null;
+    let isMouseDown = false;
+
+    // Touch handlers
+    viewport.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 1) return;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentX = startX;
+        startTime = Date.now();
+        isTouching = true;
+        isSwiping = null;
+        track.style.transition = 'none';
+    }, { passive: true });
+
+    viewport.addEventListener('touchmove', (e) => {
+        if (!isTouching) return;
+        currentX = e.touches[0].clientX;
+        const currentY = e.touches[0].clientY;
+        const dx = currentX - startX;
+        const dy = currentY - startY;
+
+        if (isSwiping === null) {
+            if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 6) {
+                isSwiping = false; // vertical page scroll
+            } else if (Math.abs(dx) > 6) {
+                isSwiping = true; // horizontal widget swipe
+            }
+        }
+
+        if (isSwiping) {
+            if (e.cancelable) e.preventDefault();
+            let effectiveDx = dx;
+            if ((currentBudgetIndex === 0 && dx > 0) || (currentBudgetIndex === 3 && dx < 0)) {
+                effectiveDx = dx * 0.25;
+            }
+            track.style.transform = `translateX(calc(-${currentBudgetIndex * 100}% + ${effectiveDx}px))`;
+        }
+    }, { passive: false });
+
+    const handleEnd = () => {
+        if (!isTouching && !isMouseDown) return;
+        const dx = currentX - startX;
+        const dt = Date.now() - startTime;
+        const velocity = Math.abs(dx) / Math.max(dt, 1);
+        const threshold = (viewport.offsetWidth || 340) * 0.2;
+
+        if (isSwiping || isMouseDown) {
+            if ((dx < -threshold || (dx < -30 && velocity > 0.25)) && currentBudgetIndex < 3) {
+                if (navigator.vibrate) navigator.vibrate(10);
+                setBudgetPeriod(currentBudgetIndex + 1);
+            } else if ((dx > threshold || (dx > 30 && velocity > 0.25)) && currentBudgetIndex > 0) {
+                if (navigator.vibrate) navigator.vibrate(10);
+                setBudgetPeriod(currentBudgetIndex - 1);
+            } else {
+                setBudgetPeriod(currentBudgetIndex);
+            }
+        }
+
+        isTouching = false;
+        isMouseDown = false;
+        isSwiping = null;
+    };
+
+    viewport.addEventListener('touchend', handleEnd, { passive: true });
+    viewport.addEventListener('touchcancel', handleEnd, { passive: true });
+
+    // Mouse handlers (desktop)
+    viewport.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        if (e.target.closest('button, .budget-edit-btn, .budget-dot')) return;
+        startX = e.clientX;
+        currentX = startX;
+        startTime = Date.now();
+        isMouseDown = true;
+        isSwiping = true;
+        track.style.transition = 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!isMouseDown) return;
+        currentX = e.clientX;
+        const dx = currentX - startX;
+        let effectiveDx = dx;
+        if ((currentBudgetIndex === 0 && dx > 0) || (currentBudgetIndex === 3 && dx < 0)) {
+            effectiveDx = dx * 0.25;
+        }
+        track.style.transform = `translateX(calc(-${currentBudgetIndex * 100}% + ${effectiveDx}px))`;
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (isMouseDown) handleEnd();
+    });
 }
 
 function renderWeekDayChart() {
@@ -2306,17 +2577,32 @@ switchTab('semana');
 
 // ===== MODAL PRESUPUESTO =====
 function openBudgetModal() {
-document.getElementById('budgetInput').value = cfg.weeklyBudget > 0 ? cfg.weeklyBudget.toFixed(2) : '';
-openModal('budgetModal');
+    const titleEl = document.getElementById('budgetModalTitle');
+    const descEl = document.getElementById('budgetModalDesc');
+    const inputEl = document.getElementById('budgetInput');
+
+    if (titleEl) titleEl.textContent = t(BUDGET_TITLES[currentBudgetIndex]);
+    if (descEl) descEl.textContent = t(BUDGET_DESCS[currentBudgetIndex]);
+
+    const budgetKey = BUDGET_CONFIG_KEYS[currentBudgetIndex];
+    const val = Number(cfg[budgetKey]) || (currentBudgetIndex === 0 ? Number(cfg.weeklyBudget) || 0 : 0);
+    if (inputEl) inputEl.value = val > 0 ? val.toFixed(2) : '';
+
+    openModal('budgetModal');
 }
 
 function saveBudget() {
-const val = parseFloat(document.getElementById('budgetInput').value) || 0;
-cfg.weeklyBudget = Math.max(0, val);
-sv('cfg', cfg);
-closeModal('budgetModal');
-showToast('💰 ' + t('settingsSaved'), 's');
-updateAll(true);
+    const val = parseFloat(document.getElementById('budgetInput').value) || 0;
+    const cleanVal = Math.max(0, val);
+    const budgetKey = BUDGET_CONFIG_KEYS[currentBudgetIndex];
+
+    cfg[budgetKey] = cleanVal;
+    if (currentBudgetIndex === 0) cfg.weeklyBudget = cleanVal;
+
+    sv('cfg', cfg);
+    closeModal('budgetModal');
+    showToast('💰 ' + t('settingsSaved'), 's');
+    updateAll(true);
 }
 
 // ===== TOAST / CELEB / CONF =====
@@ -3271,6 +3557,7 @@ setTimeout(() => { const s = document.getElementById('splash'); s.classList.add(
 checkAchs();
 renderFunds();
 renderTransferSelectors();
+initBudgetWidgetStack();
 updateAll(true);
 document.querySelectorAll('.btn, .btn-sm, .qab, .mbtn').forEach(b => { b.addEventListener('click', function(e) { addRipple(e, this); }); });
 const si = document.getElementById('histSearchInp');
