@@ -81,26 +81,20 @@ pointer-events:none;z-index:0;
 .splash-bar{width:120px;height:3px;background:var(--b2);border-radius:999px;margin-top:22px;overflow:hidden;animation:fadeUp 0.6s 0.6s both}
 .splash-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--g),var(--c));border-radius:999px;transition:width 0.8s var(--ease-smooth)}
 
-.hdr{position:sticky;top:0;z-index:80;backdrop-filter:blur(28px) saturate(190%);-webkit-backdrop-filter:blur(28px) saturate(190%);background:rgba(0,0,0,0.68);border-bottom:1px solid var(--b);transition:0.3s;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
-.theme-light .hdr{background:rgba(244,245,249,0.78);box-shadow:0 4px 20px rgba(0,0,0,0.03)}
-.hdr-in{max-width:520px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.logo-ic{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#30D158,#24A143);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 4px 14px rgba(48,209,88,0.35), inset 0 1px 1px rgba(255,255,255,0.45)}
-.logo-ic svg{width:16px;height:16px;color:#000;position:relative;z-index:2}
-.logo-tx{font-size:19px;font-weight:800;color:var(--text);letter-spacing:-0.4px}
-.hdr-mid{flex:1;display:flex;justify-content:center}
-.xp-mini{background:rgba(120,120,128,0.18);border-radius:999px;height:6px;width:84px;overflow:hidden;cursor:pointer;border:1px solid var(--b2);box-shadow:inset 0 1px 2px rgba(0,0,0,0.2)}
-.xp-mini-f{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--g),var(--c));transition:width 0.6s var(--ease-spring)}
-.hdr-r{display:flex;gap:8px;align-items:center}
-.streak-chip{display:flex;align-items:center;gap:5px;background:var(--od);border:1px solid rgba(255,159,10,0.22);border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700;color:var(--o);cursor:pointer;transition:0.2s;box-shadow:inset 0 1px 1px rgba(255,255,255,0.1)}
-.streak-chip:active{transform:scale(0.94)}
-.streak-chip svg{width:13px;height:13px}
+.hdr{position:sticky;top:0;z-index:80;backdrop-filter:blur(28px) saturate(190%);-webkit-backdrop-filter:blur(28px) saturate(190%);background:rgba(0,0,0,0.65);border-bottom:1px solid var(--b);transition:0.3s;box-shadow:0 4px 20px rgba(0,0,0,0.25)}
+.theme-light .hdr{background:rgba(244,245,249,0.85);box-shadow:0 4px 20px rgba(0,0,0,0.04)}
+.hdr-in{max-width:520px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hdr-week-arrows{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.hdr-week-center{flex:1;text-align:center;min-width:0}
+.hdr-week-title{font-size:14px;font-weight:800;color:var(--text);letter-spacing:-0.3px}
+.hdr-week-sub{font-size:11px;color:var(--m);margin-top:2px;font-weight:600}
+.hdr-week-right{display:flex;align-items:center;justify-content:flex-end;flex-shrink:0}
 .ic-btn{width:36px;height:36px;border-radius:12px;background:var(--card-glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--b);border-top:1px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--m);transition:0.2s var(--ease-smooth);position:relative;overflow:hidden;box-shadow:var(--glass-highlight),0 2px 8px rgba(0,0,0,0.2)}
 .ic-btn:hover{color:var(--text);background:var(--cardh);border-color:var(--b2)}
 .ic-btn:active{transform:scale(0.92)}
 .ic-btn svg{width:18px;height:18px;position:relative;z-index:1}
 
-main{max-width:520px;margin:0 auto;padding:16px 16px 140px;overflow-x:hidden;position:relative;z-index:2}
+main{max-width:520px;margin:0 auto;padding:14px 16px 140px;overflow-x:hidden;position:relative;z-index:2}
 .tab{display:none;will-change:opacity}
 .tab.active{display:block;animation:tabIn 0.35s var(--ease-smooth) both}
 
@@ -246,13 +240,14 @@ select.inp option{background:var(--bg2);color:var(--text)}
 .toast.w{background:rgba(255,159,10,0.2);border-color:rgba(255,159,10,0.35);color:var(--o)}
 
 /* ===== FLOATING GLASS NAVIGATION DOCK ===== */
-.nav{position:fixed;bottom:18px;left:14px;right:14px;margin:0 auto;max-width:440px;z-index:80;backdrop-filter:blur(32px) saturate(200%);-webkit-backdrop-filter:blur(32px) saturate(200%);background:rgba(18,20,26,0.65);border:1px solid rgba(255,255,255,0.12);border-top:1px solid rgba(255,255,255,0.22);border-radius:999px;padding:6px 10px;box-shadow:inset 0 1px 1px 0 rgba(255,255,255,0.16),0 16px 40px rgba(0,0,0,0.55),0 4px 12px rgba(0,0,0,0.3)}
-.theme-light .nav{background:rgba(255,255,255,0.75);border-color:rgba(0,0,0,0.08);border-top-color:rgba(255,255,255,0.9);box-shadow:inset 0 1px 1px 0 rgba(255,255,255,0.9),0 14px 36px rgba(0,0,0,0.1)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;width:100%}
-.ni{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--m);cursor:pointer;transition:all 0.25s var(--ease-spring);position:relative;border:none;background:transparent;font-family:inherit;padding:0;flex-shrink:0}
+.nav{position:fixed;bottom:16px;left:10px;right:10px;margin:0 auto;max-width:480px;z-index:80;backdrop-filter:blur(32px) saturate(200%);-webkit-backdrop-filter:blur(32px) saturate(200%);background:rgba(18,20,26,0.72);border:1px solid rgba(255,255,255,0.12);border-top:1px solid rgba(255,255,255,0.24);border-radius:999px;padding:5px 8px;box-shadow:inset 0 1px 1px 0 rgba(255,255,255,0.16),0 16px 40px rgba(0,0,0,0.55),0 4px 12px rgba(0,0,0,0.3)}
+.theme-light .nav{background:rgba(255,255,255,0.85);border-color:rgba(0,0,0,0.08);border-top-color:rgba(255,255,255,0.9);box-shadow:inset 0 1px 1px 0 rgba(255,255,255,0.9),0 14px 36px rgba(0,0,0,0.1)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;width:100%;gap:3px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.nav-in::-webkit-scrollbar{display:none}
+.ni{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--m);cursor:pointer;transition:all 0.25s var(--ease-spring);position:relative;border:none;background:transparent;font-family:inherit;padding:0;flex-shrink:0}
 .ni:hover{color:var(--text)}
 .ni.active{color:var(--g);background:linear-gradient(135deg,rgba(48,209,88,0.26),rgba(48,209,88,0.1));box-shadow:0 0 16px rgba(48,209,88,0.45),inset 0 1px 1px rgba(255,255,255,0.2)}
-.ni svg{width:20px;height:20px;transition:0.2s var(--ease-spring)}
+.ni svg{width:18px;height:18px;transition:0.2s var(--ease-spring)}
 .ni:active{transform:scale(0.88)}
 
 /* ===== WEEK CONTROLS ===== */
@@ -615,6 +610,28 @@ select.inp option{background:var(--bg2);color:var(--text)}
 .compact-opt-check{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--g);opacity:0;transition:opacity 0.15s;flex-shrink:0}
 .compact-opt-item.selected .compact-opt-check{opacity:1}
 
+/* ===== iOS SETTINGS & SLIDE NAVIGATION ===== */
+.ios-settings-viewport{position:relative;width:100%;overflow:hidden;min-height:420px;display:flex;flex-direction:column}
+.ios-settings-main{transition:transform 0.28s cubic-bezier(0.32, 0.72, 0, 1),opacity 0.22s;width:100%}
+.ios-settings-main.slide-left{transform:translateX(-25%);opacity:0;pointer-events:none}
+.ios-sub-screen{position:absolute;inset:0;background:var(--bg2);z-index:25;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);overflow-y:auto;padding:16px 18px 24px;pointer-events:none;-webkit-overflow-scrolling:touch}
+.ios-sub-screen.active{transform:translateX(0);pointer-events:auto}
+.ios-sub-header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--b)}
+.ios-back-btn{display:flex;align-items:center;gap:4px;background:none;border:none;color:var(--g);font-size:14px;font-weight:700;cursor:pointer;padding:4px 6px;border-radius:8px;font-family:inherit;transition:0.15s}
+.ios-back-btn:active{background:rgba(48,209,88,0.15);transform:scale(0.96)}
+.ios-back-btn svg{width:16px;height:16px}
+.ios-sub-title{font-size:16px;font-weight:800;color:var(--text);flex:1;text-align:center;margin-right:20px;letter-spacing:-0.3px}
+
+/* iOS Capsule Switch */
+.ios-switch{position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0;cursor:pointer}
+.ios-switch input{opacity:0;width:0;height:0;position:absolute}
+.ios-slider{position:absolute;inset:0;background:rgba(120,120,128,0.32);border-radius:999px;transition:0.25s cubic-bezier(0.2, 0.8, 0.2, 1);box-shadow:inset 0 1px 2px rgba(0,0,0,0.3)}
+.theme-light .ios-slider{background:rgba(120,120,128,0.22)}
+.ios-slider:before{position:absolute;content:"";height:22px;width:22px;left:2px;bottom:2px;background:#ffffff;border-radius:50%;transition:0.25s cubic-bezier(0.34, 1.56, 0.64, 1);box-shadow:0 2px 5px rgba(0,0,0,0.35)}
+.ios-switch input:checked + .ios-slider{background:#30D158;box-shadow:0 0 12px rgba(48,209,88,0.35)}
+.ios-switch input:checked + .ios-slider:before{transform:translateX(20px)}
+.compact-opt-item.selected .compact-opt-check{opacity:1}
+
 #distPreview{display:flex;flex-direction:column;gap:8px;max-height:290px;overflow-y:auto;overflow-x:hidden;padding-right:2px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;overscroll-behavior-y:contain;touch-action:pan-y}
 
 .pct-input{width:60px;padding:6px 8px;background:rgba(120,120,128,0.14);border:1px solid var(--b);border-radius:8px;color:var(--text);font-size:13px;font-weight:800;text-align:center;outline:none;font-family:inherit}
@@ -628,8 +645,8 @@ select.inp option{background:var(--bg2);color:var(--text)}
 .rbt{height:6px;background:rgba(120,120,128,0.14);border-radius:999px;overflow:hidden}
 .rbf{height:100%;border-radius:999px;transition:width 1s var(--ease-spring)}
 
-@media(min-width:481px){main{padding:20px 20px 140px}}
-@media(min-width:768px){main{max-width:620px;padding:26px 24px 140px}}
+@media(min-width:481px){main{padding:8px 20px 140px}}
+@media(min-width:768px){main{max-width:620px;padding:12px 24px 140px}}
 @media(min-width:1024px){main{max-width:740px}}
 </style>
 </head>
@@ -650,22 +667,19 @@ select.inp option{background:var(--bg2);color:var(--text)}
 
 <header class="hdr">
 <div class="hdr-in">
-<div class="logo">
-<div class="logo-ic">
-<svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+<div class="hdr-week-arrows">
+<button class="week-nav-btn" id="weekPrev" onclick="navWeek(-1)" aria-label="Semana anterior">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+</button>
+<button class="week-nav-btn" id="weekNext" onclick="navWeek(1)" aria-label="Semana siguiente">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+</button>
 </div>
-<span class="logo-tx">MiDinero</span>
+<div class="hdr-week-center" onclick="openWeekHistoryModal()" style="cursor:pointer" title="Ver historial de semanas">
+<div class="hdr-week-title" id="weekNavTitle">Esta semana</div>
+<div class="hdr-week-sub" id="weekNavSub">--</div>
 </div>
-<div class="hdr-mid">
-<div class="xp-mini" onclick="switchTab('perfil')" title="Ver perfil y XP">
-<div class="xp-mini-f" id="xpMiniF" style="width:0%"></div>
-</div>
-</div>
-<div class="hdr-r">
-<div class="streak-chip" id="streakBadge" style="display:none" onclick="switchTab('retos')">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
-<span id="streakCount">0</span>
-</div>
+<div class="hdr-week-right">
 <button class="ic-btn" onclick="openSettings()" aria-label="Ajustes">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
 </button>
@@ -777,148 +791,319 @@ select.inp option{background:var(--bg2);color:var(--text)}
 </div>
 </div>
 
-<!-- Modal Ajustes -->
+<!-- Modal Ajustes (iOS Settings Architecture) -->
 <div class="mo" id="settingsModal" onclick="if(event.target===this)closeModal('settingsModal')">
-<div class="mb">
-<div class="modal-header">
+<div class="mb" style="max-height:min(90vh,740px);width:min(94vw,500px);padding:0">
+<div class="modal-header" style="position:sticky;top:0;z-index:30;background:var(--bg2);padding:14px 18px">
 <div class="modal-header-title" data-i18n="settings">⚙️ Ajustes</div>
 <button class="modal-close-btn" onclick="closeModal('settingsModal')" aria-label="Cerrar">✕</button>
 </div>
-<div class="mb-body">
-<div class="modal-subtitle" data-i18n="settingsDesc">Personaliza tu experiencia</div>
-<div class="settings-section">
-<div class="settings-section-title" data-i18n="weekly">SEMANAL</div>
-<div class="settings-group">
-<div class="settings-item" onclick="openBudgetModal()">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--gd);color:var(--g)">💰</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="weeklyBudget">Presupuesto semanal</div>
-<div class="settings-item-sub" id="budgetSub" data-i18n="notSet">No definido</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-<div class="settings-item">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--od);color:var(--o)">💵</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="dailyAmount">Monto diario</div>
-<div class="settings-item-sub" data-i18n="dailyDesc">Cuánto recibes normalmente</div>
-</div>
-</div>
-<input type="number" class="pct-input" id="setDaily" value="1.00" step="0.10" onclick="event.stopPropagation()">
-</div>
-</div>
-</div>
-<div class="settings-section">
-<div class="settings-section-title" data-i18n="appearance">APARIENCIA</div>
-<div class="settings-group">
-<div class="settings-item" onclick="openSubScreen('themeScreen')">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--vd);color:var(--v)">🎨</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="theme">Tema</div>
-<div class="settings-item-sub" id="themeSub" data-i18n="dark">Oscuro</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-<div class="settings-item" onclick="openSubScreen('langScreen')">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--cd);color:var(--c)">🌐</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="language">Idioma</div>
-<div class="settings-item-sub" id="langSub">Español</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-<div class="settings-item" onclick="openSubScreen('currencyScreen')">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--gd);color:var(--g)">💱</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="currency">Moneda</div>
-<div class="settings-item-sub" id="currSub">$ USD</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-</div>
-</div>
-<div class="settings-section">
-<div class="settings-section-title" data-i18n="categories">CATEGORÍAS</div>
-<div class="settings-group">
-<div class="settings-item" onclick="openSubModal('categoriesModal')">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--pd);color:var(--p)">📂</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="manageCats">Administrar categorías</div>
-<div class="settings-item-sub" data-i18n="manageCatsDesc">Iconos, colores, porcentajes</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-<div class="settings-item" onclick="openSubModal('distributionModal')">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--gd);color:var(--g)">📊</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="distribution">Distribución</div>
-<div class="settings-item-sub" data-i18n="distributionDesc">Cómo se divide tu dinero</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-</div>
-</div>
-<div class="settings-section">
-<div class="settings-section-title" data-i18n="data">DATOS</div>
-<div class="settings-group">
-<div class="settings-item" onclick="exportJSON()">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--cd);color:var(--c)">📤</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="exportJSON">Exportar JSON</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-<div class="settings-item" onclick="exportCSV()">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--gd);color:var(--g)">📊</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="exportCSV">Exportar CSV</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-<div class="settings-item" onclick="showImport()">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--vd);color:var(--v)">📥</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="import">Importar</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-<div class="settings-item" onclick="resetAll()">
-<div class="settings-item-left">
-<div class="settings-item-icon" style="background:var(--pd);color:var(--p)">🗑️</div>
-<div class="settings-item-text">
-<div class="settings-item-title" data-i18n="deleteAll" style="color:var(--r)">Borrar todo</div>
-</div>
-</div>
-<div class="settings-item-arrow">›</div>
-</div>
-</div>
-<div id="impSec" style="display:none;margin-top:12px">
-<textarea class="ea" id="impArea" placeholder="Pega aquí los datos exportados en JSON..." data-i18n-ph="pasteJSON"></textarea>
-<button class="btn-sm" onclick="importData()" style="width:100%" data-i18n="importData">Importar datos</button>
-</div>
-</div>
-<div class="ma" style="margin-top:20px">
-<button class="mbtn cn" onclick="closeModal('settingsModal')" data-i18n="close">Cerrar</button>
-<button class="mbtn ok g" onclick="saveSettings()" data-i18n="save">Guardar</button>
+<div class="mb-body" style="padding:0;overflow:hidden">
+<div class="ios-settings-viewport" id="iosSettingsViewport">
+
+    <!-- Vista Principal de Ajustes (iOS Main View) -->
+    <div class="ios-settings-main" id="iosSettingsMain" style="padding:16px 18px 24px;overflow-y:auto;max-height:min(78vh,640px)">
+        <div class="modal-subtitle" data-i18n="settingsDesc" style="margin-bottom:16px">Personaliza tu experiencia</div>
+
+        <!-- SEMANAL -->
+        <div class="settings-section">
+            <div class="settings-section-title" data-i18n="weekly">SEMANAL</div>
+            <div class="settings-group">
+                <div class="settings-item" onclick="openSettingsSubScreen('budgetSubScreen')">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--gd);color:var(--g)">💰</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="weeklyBudget">Presupuesto Semanal</div>
+                            <div class="settings-item-sub">Límite para tus gastos</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span class="settings-item-value" id="budgetSub">$20.00</span>
+                        <div class="settings-item-arrow">›</div>
+                    </div>
+                </div>
+                <div class="settings-item" onclick="openSettingsSubScreen('dailySubScreen')">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--od);color:var(--o)">💵</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="dailyAmount">Monto diario</div>
+                            <div class="settings-item-sub" data-i18n="dailyDesc">Cuánto recibes normalmente</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span class="settings-item-value" id="dailySubVal">$1.00</span>
+                        <div class="settings-item-arrow">›</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- APARIENCIA -->
+        <div class="settings-section">
+            <div class="settings-section-title" data-i18n="appearance">APARIENCIA</div>
+            <div class="settings-group">
+                <div class="settings-item" onclick="openSettingsSubScreen('themeSubScreen')">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--vd);color:var(--v)">🎨</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="theme">Tema</div>
+                            <div class="settings-item-sub">Elige tu apariencia</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span class="settings-item-value" id="themeSub">Oscuro</span>
+                        <div class="settings-item-arrow">›</div>
+                    </div>
+                </div>
+                <div class="settings-item" onclick="openSettingsSubScreen('langSubScreen')">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--cd);color:var(--c)">🌐</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="language">Idioma</div>
+                            <div class="settings-item-sub">Idioma de la app</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span class="settings-item-value" id="langSub">Español</span>
+                        <div class="settings-item-arrow">›</div>
+                    </div>
+                </div>
+                <div class="settings-item" onclick="openSettingsSubScreen('currSubScreen')">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--gd);color:var(--g)">💱</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="currency">Moneda</div>
+                            <div class="settings-item-sub">Símbolo y formato</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span class="settings-item-value" id="currSub">$ USD</span>
+                        <div class="settings-item-arrow">›</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATEGORÍAS -->
+        <div class="settings-section">
+            <div class="settings-section-title" data-i18n="categories">CATEGORÍAS</div>
+            <div class="settings-group">
+                <div class="settings-item" onclick="openSettingsSubScreen('catsSubScreen')">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--pd);color:var(--p)">📂</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="manageCats">Administrar categorías</div>
+                            <div class="settings-item-sub" data-i18n="manageCatsDesc">Iconos, colores, porcentajes</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span class="settings-item-value" id="catsCountSub">6</span>
+                        <div class="settings-item-arrow">›</div>
+                    </div>
+                </div>
+                <div class="settings-item" onclick="openSettingsSubScreen('distSubScreen')">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--gd);color:var(--g)">📊</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="distribution">Distribución</div>
+                            <div class="settings-item-sub" data-i18n="distributionDesc">Cómo se divide tu dinero</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                        <span class="settings-item-value" id="distSubVal">100%</span>
+                        <div class="settings-item-arrow">›</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATOS -->
+        <div class="settings-section">
+            <div class="settings-section-title" data-i18n="data">DATOS</div>
+            <div class="settings-group">
+                <div class="settings-item" onclick="exportJSON()">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--cd);color:var(--c)">📤</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="exportJSON">Exportar JSON</div>
+                            <div class="settings-item-sub">Copia de seguridad</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-arrow">›</div>
+                </div>
+                <div class="settings-item" onclick="exportCSV()">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--gd);color:var(--g)">📊</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="exportCSV">Exportar CSV</div>
+                            <div class="settings-item-sub">Para hoja de cálculo</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-arrow">›</div>
+                </div>
+                <div class="settings-item" onclick="openSettingsSubScreen('importSubScreen')">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--vd);color:var(--v)">📥</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="import">Importar datos</div>
+                            <div class="settings-item-sub">Restaurar respaldo</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-arrow">›</div>
+                </div>
+                <div class="settings-item" onclick="resetAll()">
+                    <div class="settings-item-left">
+                        <div class="settings-item-icon" style="background:var(--pd);color:var(--p)">🗑️</div>
+                        <div class="settings-item-text">
+                            <div class="settings-item-title" data-i18n="deleteAll" style="color:var(--r)">Borrar todo</div>
+                            <div class="settings-item-sub">Restablecer la app a cero</div>
+                        </div>
+                    </div>
+                    <div class="settings-item-arrow" style="color:var(--r)">›</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUB-PANTALLA: Presupuesto Semanal -->
+    <div class="ios-sub-screen" id="budgetSubScreen">
+        <div class="ios-sub-header">
+            <button class="ios-back-btn" onclick="closeSettingsSubScreen()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Ajustes</span>
+            </button>
+            <div class="ios-sub-title" data-i18n="weeklyBudget">Presupuesto Semanal</div>
+        </div>
+        <div class="modal-subtitle" data-i18n="budgetDesc">Define cuánto puedes gastar esta semana.</div>
+        <div class="iw"><span class="ip" id="budgetSubCurrIp">$</span><input type="number" class="inp big" id="budgetSubInput" placeholder="50.00" step="1" min="0"></div>
+        <div style="background:var(--cd);border:1px solid rgba(0,122,255,0.15);border-radius:var(--radxs);padding:14px;font-size:12px;color:var(--text);opacity:0.9;line-height:1.5;margin-bottom:16px">
+            💡 <span data-i18n="budgetTip">Un buen presupuesto semanal te ayuda a controlar tus gastos y alcanzar tus objetivos de ahorro.</span>
+        </div>
+        <button class="btn g" onclick="saveBudgetFromSubScreen()" data-i18n="save">Guardar Presupuesto</button>
+    </div>
+
+    <!-- SUB-PANTALLA: Monto Diario -->
+    <div class="ios-sub-screen" id="dailySubScreen">
+        <div class="ios-sub-header">
+            <button class="ios-back-btn" onclick="closeSettingsSubScreen()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Ajustes</span>
+            </button>
+            <div class="ios-sub-title" data-i18n="dailyAmount">Monto Diario</div>
+        </div>
+        <div class="modal-subtitle" data-i18n="dailyDesc">Cuánto recibes normalmente</div>
+        <div class="iw"><span class="ip" id="dailySubCurrIp">$</span><input type="number" class="inp big" id="setDaily" value="1.00" step="0.10"></div>
+        <div style="background:var(--od);border:1px solid rgba(255,149,0,0.15);border-radius:var(--radxs);padding:14px;font-size:12px;color:var(--text);opacity:0.9;line-height:1.5;margin-bottom:16px">
+            💡 Este monto se usará como sugerencia inicial cada vez que abras "Anotar dinero".
+        </div>
+        <button class="btn g" onclick="saveDailyFromSubScreen()" data-i18n="save">Guardar Monto</button>
+    </div>
+
+    <!-- SUB-PANTALLA: Tema -->
+    <div class="ios-sub-screen" id="themeSubScreen">
+        <div class="ios-sub-header">
+            <button class="ios-back-btn" onclick="closeSettingsSubScreen()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Ajustes</span>
+            </button>
+            <div class="ios-sub-title" data-i18n="theme">Tema</div>
+        </div>
+        <div class="modal-subtitle" data-i18n="selectTheme">Elige tu apariencia</div>
+        <div class="compact-opt-list">
+            <div class="compact-opt-item" id="optThemeDark" onclick="setTheme('dark')">
+                <div class="compact-opt-left"><div class="compact-opt-icon" style="background:#171A22;border:1px solid rgba(255,255,255,0.1)">🌙</div><div class="compact-opt-label" data-i18n="dark">Modo Oscuro</div></div>
+                <div class="compact-opt-check">✓</div>
+            </div>
+            <div class="compact-opt-item" id="optThemeLight" onclick="setTheme('light')">
+                <div class="compact-opt-left"><div class="compact-opt-icon" style="background:#FFF9E6;border:1px solid rgba(0,0,0,0.1)">☀️</div><div class="compact-opt-label" data-i18n="light">Modo Claro</div></div>
+                <div class="compact-opt-check">✓</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUB-PANTALLA: Idioma -->
+    <div class="ios-sub-screen" id="langSubScreen">
+        <div class="ios-sub-header">
+            <button class="ios-back-btn" onclick="closeSettingsSubScreen()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Ajustes</span>
+            </button>
+            <div class="ios-sub-title" data-i18n="language">Idioma</div>
+        </div>
+        <div class="modal-subtitle" data-i18n="selectLang">Idioma de la app</div>
+        <div class="compact-opt-list">
+            <div class="compact-opt-item" id="optLangEs" onclick="setLang('es')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--pd)">🇪🇸</div><div class="compact-opt-label">Español</div></div><div class="compact-opt-check">✓</div></div>
+            <div class="compact-opt-item" id="optLangEn" onclick="setLang('en')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--cd)">🇺🇸</div><div class="compact-opt-label">English</div></div><div class="compact-opt-check">✓</div></div>
+            <div class="compact-opt-item" id="optLangFr" onclick="setLang('fr')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--vd)">🇫🇷</div><div class="compact-opt-label">Français</div></div><div class="compact-opt-check">✓</div></div>
+            <div class="compact-opt-item" id="optLangPt" onclick="setLang('pt')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--gd)">🇵🇹</div><div class="compact-opt-label">Português</div></div><div class="compact-opt-check">✓</div></div>
+        </div>
+    </div>
+
+    <!-- SUB-PANTALLA: Moneda -->
+    <div class="ios-sub-screen" id="currSubScreen">
+        <div class="ios-sub-header">
+            <button class="ios-back-btn" onclick="closeSettingsSubScreen()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Ajustes</span>
+            </button>
+            <div class="ios-sub-title" data-i18n="currency">Moneda</div>
+        </div>
+        <div class="modal-subtitle" data-i18n="selectCurr">Símbolo y formato</div>
+        <div class="compact-opt-list" id="currencyList"></div>
+    </div>
+
+    <!-- SUB-PANTALLA: Administrar Categorías -->
+    <div class="ios-sub-screen" id="catsSubScreen">
+        <div class="ios-sub-header">
+            <button class="ios-back-btn" onclick="closeSettingsSubScreen()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Ajustes</span>
+            </button>
+            <div class="ios-sub-title" data-i18n="manageCats">Administrar categorías</div>
+        </div>
+        <div class="modal-subtitle" data-i18n="manageCatsDesc">Iconos, colores, porcentajes</div>
+        <div class="cat-list" id="catList"></div>
+        <button class="btn g" onclick="openCatModal()" style="margin-top:14px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span data-i18n="addCategory">Agregar categoría</span>
+        </button>
+        <div class="dist-total" id="catTotal" style="margin-top:14px">
+            <div class="dist-total-label" data-i18n="total">Total</div>
+            <div class="dist-total-value" id="catTotalVal">0%</div>
+        </div>
+    </div>
+
+    <!-- SUB-PANTALLA: Distribución (Con iOS Switches) -->
+    <div class="ios-sub-screen" id="distSubScreen">
+        <div class="ios-sub-header">
+            <button class="ios-back-btn" onclick="closeSettingsSubScreen()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Ajustes</span>
+            </button>
+            <div class="ios-sub-title" data-i18n="distribution">Distribución</div>
+        </div>
+        <div class="modal-subtitle" data-i18n="distributionDesc">Cómo se divide tu dinero</div>
+        <div id="distPreview"></div>
+        <div class="dist-total" id="distTotal" style="margin-top:14px">
+            <div class="dist-total-label" data-i18n="total">Total</div>
+            <div class="dist-total-value" id="distTotalVal">0%</div>
+        </div>
+    </div>
+
+    <!-- SUB-PANTALLA: Importar -->
+    <div class="ios-sub-screen" id="importSubScreen">
+        <div class="ios-sub-header">
+            <button class="ios-back-btn" onclick="closeSettingsSubScreen()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>Ajustes</span>
+            </button>
+            <div class="ios-sub-title" data-i18n="import">Importar Datos</div>
+        </div>
+        <div class="modal-subtitle">Pega el texto JSON exportado previamente.</div>
+        <textarea class="ea" id="impArea" placeholder="Pega aquí los datos exportados en JSON..." data-i18n-ph="pasteJSON" style="min-height:160px"></textarea>
+        <button class="btn g" onclick="importData()" style="width:100%" data-i18n="importData">Importar datos</button>
+    </div>
+
 </div>
 </div>
 </div>
@@ -938,99 +1123,6 @@ select.inp option{background:var(--bg2);color:var(--text)}
 <div class="ma">
 <button class="mbtn cn" onclick="closeModal('profileModal')" data-i18n="cancel">Cancelar</button>
 <button class="mbtn ok g" onclick="saveProfile()" data-i18n="save">Guardar</button>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Sub screens -->
-<div class="sub-screen-modal mo" id="themeScreen" onclick="if(event.target===this)closeSubScreen('themeScreen')">
-<div class="sub-panel-box">
-<div class="sub-modal-header">
-<div class="sub-modal-title" data-i18n="theme">🎨 Tema</div>
-<button class="sub-modal-close" onclick="closeSubScreen('themeScreen')" aria-label="Cerrar">✕</button>
-</div>
-<div class="sub-panel-body">
-<div class="modal-subtitle" data-i18n="selectTheme">Elige tu apariencia</div>
-<div class="compact-opt-list">
-<div class="compact-opt-item" id="optThemeDark" onclick="setTheme('dark')">
-<div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--bg3)"></div><div class="compact-opt-label" data-i18n="dark">Oscuro</div></div>
-<div class="compact-opt-check">✓</div>
-</div>
-<div class="compact-opt-item" id="optThemeLight" onclick="setTheme('light')">
-<div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--yd)">☀️</div><div class="compact-opt-label" data-i18n="light">Claro</div></div>
-<div class="compact-opt-check">✓</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="sub-screen-modal mo" id="langScreen" onclick="if(event.target===this)closeSubScreen('langScreen')">
-<div class="sub-panel-box">
-<div class="sub-modal-header">
-<div class="sub-modal-title" data-i18n="language">🌐 Idioma</div>
-<button class="sub-modal-close" onclick="closeSubScreen('langScreen')" aria-label="Cerrar">✕</button>
-</div>
-<div class="sub-panel-body">
-<div class="modal-subtitle" data-i18n="selectLang">Selecciona tu idioma</div>
-<div class="compact-opt-list">
-<div class="compact-opt-item" id="optLangEs" onclick="setLang('es')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--pd)">🇪🇸</div><div class="compact-opt-label">Español</div></div><div class="compact-opt-check">✓</div></div>
-<div class="compact-opt-item" id="optLangEn" onclick="setLang('en')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--cd)">🇬🇧</div><div class="compact-opt-label">English</div></div><div class="compact-opt-check">✓</div></div>
-<div class="compact-opt-item" id="optLangFr" onclick="setLang('fr')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--vd)">🇫🇷</div><div class="compact-opt-label">Français</div></div><div class="compact-opt-check">✓</div></div>
-<div class="compact-opt-item" id="optLangPt" onclick="setLang('pt')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--gd)">🇧🇷</div><div class="compact-opt-label">Português</div></div><div class="compact-opt-check">✓</div></div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="sub-screen-modal mo" id="currencyScreen" onclick="if(event.target===this)closeSubScreen('currencyScreen')">
-<div class="sub-panel-box">
-<div class="sub-modal-header">
-<div class="sub-modal-title" data-i18n="currency">💱 Moneda</div>
-<button class="sub-modal-close" onclick="closeSubScreen('currencyScreen')" aria-label="Cerrar">✕</button>
-</div>
-<div class="sub-panel-body">
-<div class="modal-subtitle" data-i18n="selectCurr">Elige tu moneda preferida</div>
-<div class="compact-opt-list" id="currencyList"></div>
-</div>
-</div>
-</div>
-
-<!-- Categorías -->
-<div class="sub-modal" id="categoriesModal" onclick="if(event.target===this)closeSubModal('categoriesModal')">
-<div class="sub-modal-box">
-<div class="sub-modal-header">
-<div class="sub-modal-title" data-i18n="categories">📂 Categorías</div>
-<button class="sub-modal-close" onclick="closeSubModal('categoriesModal')" aria-label="Cerrar">✕</button>
-</div>
-<div class="sub-modal-body">
-<div class="modal-subtitle" data-i18n="catsDesc">Gestiona cómo distribuyes tu dinero.</div>
-<div class="cat-list" id="catList"></div>
-<button class="btn g" onclick="openCatModal()" style="margin-top:16px">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-<span data-i18n="addCategory">Agregar categoría</span>
-</button>
-<div class="dist-total" id="catTotal" style="margin-top:16px">
-<div class="dist-total-label" data-i18n="total">Total</div>
-<div class="dist-total-value" id="catTotalVal">0%</div>
-</div>
-</div>
-</div>
-</div>
-
-<div class="sub-modal" id="distributionModal" onclick="if(event.target===this)closeSubModal('distributionModal')">
-<div class="sub-modal-box">
-<div class="sub-modal-header">
-<div class="sub-modal-title" data-i18n="distribution">📊 Distribución</div>
-<button class="sub-modal-close" onclick="closeSubModal('distributionModal')" aria-label="Cerrar">✕</button>
-</div>
-<div class="sub-modal-body">
-<div class="modal-subtitle" data-i18n="distDesc">Así se distribuye tu dinero según los porcentajes.</div>
-<div id="distPreview"></div>
-<div class="dist-total" id="distTotal" style="margin-top:16px">
-<div class="dist-total-label" data-i18n="total">Total</div>
-<div class="dist-total-value" id="distTotalVal">0%</div>
 </div>
 </div>
 </div>
@@ -1058,12 +1150,12 @@ select.inp option{background:var(--bg2);color:var(--text)}
 
 <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--b)">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <label style="font-size:12px;font-weight:700;color:var(--text)" for="catHasGoal">🎯 Objetivo de fondo</label>
+        <label style="font-size:12px;font-weight:700;color:var(--text);cursor:pointer" for="catHasGoal">🎯 Objetivo de fondo</label>
         <input type="checkbox" id="catHasGoal" onchange="toggleCatGoalFields()" style="width:18px;height:18px;accent-color:var(--g);cursor:pointer">
     </div>
     <div id="catGoalFields" style="display:none">
         <label style="font-size:11px;color:var(--m);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Cantidad objetivo</label>
-        <div class="iw"><span class="ip">$</span><input type="number" class="inp" id="catGoalAmt" placeholder="0.00" step="1" min="0"></div>
+        <div class="iw"><span class="ip" id="catGoalCurrIp">$</span><input type="number" class="inp" id="catGoalAmt" placeholder="0.00" step="1" min="0"></div>
         <div class="g2" style="margin-bottom:8px">
             <div>
                 <label style="font-size:11px;color:var(--m);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px">Frecuencia</label>
@@ -1081,12 +1173,12 @@ select.inp option{background:var(--bg2);color:var(--text)}
             </div>
         </div>
         <div style="font-size:11px;color:var(--m);line-height:1.4;margin-top:4px">
-            💡 Al completarse el 100% de esta meta, su porcentaje se redistribuirá automáticamente entre los fondos activos que aún no alcanzan su meta.
+            💡 Al completar el 100% de esta meta, su porcentaje se redistribuirá automáticamente entre los fondos activos que aún no alcanzan su meta.
         </div>
     </div>
 </div>
 <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;margin-bottom:12px">
-    <span style="font-size:12px;color:var(--m);font-weight:600">Categoría activa</span>
+    <label for="catActive" style="font-size:12px;color:var(--m);font-weight:600;cursor:pointer">Categoría activa</label>
     <input type="checkbox" id="catActive" checked style="width:18px;height:18px;accent-color:var(--g);cursor:pointer">
 </div>
 
@@ -1120,20 +1212,6 @@ select.inp option{background:var(--bg2);color:var(--text)}
 <main>
 <!-- ===== TAB SEMANA (PRINCIPAL) ===== -->
 <section class="tab active" id="tab-semana">
-<!-- Navegación de semanas -->
-<div class="week-nav">
-<button class="week-nav-btn" id="weekPrev" onclick="navWeek(-1)" aria-label="Semana anterior">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-</button>
-<div class="week-nav-center">
-<div class="week-nav-title" id="weekNavTitle">Esta semana</div>
-<div class="week-nav-sub" id="weekNavSub">--</div>
-</div>
-<button class="week-nav-btn" id="weekNext" onclick="navWeek(1)" aria-label="Semana siguiente">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-</button>
-</div>
-
 <!-- Consejo del día -->
 <div class="dtip">
 <div class="dtip-l" data-i18n="tipOfDay">Consejo del día</div>
@@ -1295,15 +1373,6 @@ select.inp option{background:var(--bg2);color:var(--text)}
 </div>
 </div>
 
-<!-- Gráfico de gastos por día -->
-<div class="card gc">
-<div class="sec">
-<svg viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-<span data-i18n="dailySpending">Gastos por día</span>
-</div>
-<div class="day-chart"><canvas id="weekDayChart"></canvas></div>
-</div>
-
 <!-- Mis fondos -->
 <div class="card gg">
 <div class="sec">
@@ -1319,6 +1388,15 @@ select.inp option{background:var(--bg2);color:var(--text)}
 
 <!-- ===== TAB STATS ===== -->
 <section class="tab" id="tab-stats">
+<!-- Gráfico de gastos por día -->
+<div class="card gc">
+<div class="sec">
+<svg viewBox="0 0 24 24" fill="none" stroke="var(--c)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+<span data-i18n="dailySpending">Gastos por día</span>
+</div>
+<div class="day-chart"><canvas id="weekDayChart"></canvas></div>
+</div>
+
 <div class="card gv">
 <div class="sec">
 <svg viewBox="0 0 24 24" fill="none" stroke="var(--v)" stroke-width="2" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
@@ -1823,25 +1901,25 @@ select.inp option{background:var(--bg2);color:var(--text)}
 
 <nav class="nav">
 <div class="nav-in">
-<button class="ni active" data-tab="semana" onclick="switchTab('semana')" aria-label="Semana">
+<button class="ni active" data-tab="semana" onclick="switchTab('semana')" aria-label="Calendario" title="Calendario">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
 </button>
-<button class="ni" data-tab="stats" onclick="switchTab('stats')" aria-label="Stats">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-</button>
-<button class="ni" data-tab="meta" onclick="switchTab('meta')" aria-label="Metas">
+<button class="ni" data-tab="meta" onclick="switchTab('meta')" aria-label="Meta" title="Meta">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/></svg>
 </button>
-<button class="ni" data-tab="retos" onclick="switchTab('retos')" aria-label="Retos">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
+<button class="ni" data-tab="stats" onclick="switchTab('stats')" aria-label="Estadística" title="Estadística">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
 </button>
-<button class="ni" data-tab="test" onclick="switchTab('test')" aria-label="Test">
+<button class="ni" data-tab="retos" onclick="switchTab('retos')" aria-label="Logros" title="Logros">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H8c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h8c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1h-1c-.55 0-1-.45-1-1v-2.34"/><path d="M6 4h12v6c0 3.31-2.69 6-6 6s-6-2.69-6-6V4z"/></svg>
+</button>
+<button class="ni" data-tab="test" onclick="switchTab('test')" aria-label="Test de compra" title="Test de compra">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
 </button>
-<button class="ni" data-tab="historial" onclick="switchTab('historial')" aria-label="Historial">
+<button class="ni" data-tab="historial" onclick="switchTab('historial')" aria-label="Historial" title="Historial">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
 </button>
-<button class="ni" data-tab="perfil" onclick="switchTab('perfil')" aria-label="Perfil">
+<button class="ni" data-tab="perfil" onclick="switchTab('perfil')" aria-label="Perfil" title="Perfil">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
 </button>
 </div>
@@ -3020,36 +3098,197 @@ el.appendChild(d);
 setTimeout(() => d.remove(), 600);
 }
 
-// ===== MODALS =====
+// ===== MODALS & iOS SETTINGS NAVIGATION =====
+let currentSettingsSubScreen = null;
+
 function syncBodyScroll() {
 const hasOpen = document.querySelector('.mo.show, .sub-modal.show, .sub-screen.show, .sub-screen-modal.show, .celeb.show');
 document.body.style.overflow = hasOpen ? 'hidden' : '';
 }
 function openModal(id) {
 const m = document.getElementById(id);
-if (m) { m.classList.add('show'); const b = m.querySelector('.mb-body, .sub-modal-body, .sub-panel-body'); if (b) b.scrollTop = 0; syncBodyScroll(); }
+if (m) { m.classList.add('show'); const b = m.querySelector('.mb-body, .sub-modal-body, .sub-panel-body, .ios-settings-main'); if (b) b.scrollTop = 0; syncBodyScroll(); }
 }
-function closeModal(id) { const m = document.getElementById(id); if (m) { m.classList.remove('show'); syncBodyScroll(); } }
-function openSubScreen(id) { const s = document.getElementById(id); if (s) { s.classList.add('show'); const b = s.querySelector('.mb-body, .sub-modal-body, .sub-panel-body'); if (b) b.scrollTop = 0; syncBodyScroll(); renderSubScreen(id); } }
-function closeSubScreen(id) { const s = document.getElementById(id); if (s) { s.classList.remove('show'); syncBodyScroll(); } }
-function openSubModal(id) { const m = document.getElementById(id); if (m) { m.classList.add('show'); const b = m.querySelector('.mb-body, .sub-modal-body, .sub-panel-body'); if (b) b.scrollTop = 0; syncBodyScroll(); if (id === 'categoriesModal') renderCatList(); if (id === 'distributionModal') renderDistPreview(); } }
-function closeSubModal(id) { const m = document.getElementById(id); if (m) { m.classList.remove('show'); syncBodyScroll(); } }
+function closeModal(id) {
+const m = document.getElementById(id);
+if (m) { m.classList.remove('show'); syncBodyScroll(); if (id === 'settingsModal') closeSettingsSubScreen(); }
+}
 
-function renderSubScreen(id) {
-if (id === 'themeScreen') {
-document.getElementById('optThemeDark')?.classList.toggle('selected', cfg.theme === 'dark');
-document.getElementById('optThemeLight')?.classList.toggle('selected', cfg.theme === 'light');
-} else if (id === 'langScreen') {
-['es','en','fr','pt'].forEach(l => {
-const item = document.getElementById('optLang' + l.charAt(0).toUpperCase() + l.slice(1));
-if (item) item.classList.toggle('selected', cfg.lang === l);
-});
-} else if (id === 'currencyScreen') {
-const currs = [['$','USD'],['€','EUR'],['£','GBP'],['S/.','PEN'],['COP','COP'],['MXN','MXN']];
-const ct = document.getElementById('currencyList');
-if (ct) ct.innerHTML = currs.map(c => `<div class="compact-opt-item ${cfg.currency === c[0] ? 'selected' : ''}" onclick="setCurr('${c[0]}')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--gd);color:var(--g)">${c[0]}</div><div class="compact-opt-label">${c[0]} ${c[1]}</div></div><div class="compact-opt-check">✓</div></div>`).join('');
+function openSettings() {
+    if (navigator.vibrate) navigator.vibrate(10);
+    closeSettingsSubScreen();
+    updateSettingsSubValues();
+    openModal('settingsModal');
 }
+
+function openSettingsSubScreen(screenId) {
+    if (navigator.vibrate) navigator.vibrate(10);
+    const mainView = document.getElementById('iosSettingsMain');
+    const subScreen = document.getElementById(screenId);
+    if (!subScreen || !mainView) return;
+
+    if (currentSettingsSubScreen && currentSettingsSubScreen !== subScreen) {
+        currentSettingsSubScreen.classList.remove('active');
+    }
+
+    if (screenId === 'themeSubScreen') renderThemeSubOptions();
+    if (screenId === 'langSubScreen') renderLangSubOptions();
+    if (screenId === 'currSubScreen') renderCurrSubOptions();
+    if (screenId === 'catsSubScreen') renderCatList();
+    if (screenId === 'distSubScreen') renderDistPreview();
+    if (screenId === 'dailySubScreen') {
+        const dInp = document.getElementById('setDaily');
+        if (dInp) dInp.value = Number(cfg.dailyAmount || 1).toFixed(2);
+        const dCurr = document.getElementById('dailySubCurrIp');
+        if (dCurr) dCurr.textContent = cfg.currency || '$';
+    }
+    if (screenId === 'budgetSubScreen') {
+        const bInp = document.getElementById('budgetSubInput');
+        if (bInp) bInp.value = Number(cfg.weeklyBudget || 0) > 0 ? Number(cfg.weeklyBudget).toFixed(2) : '';
+        const bCurr = document.getElementById('budgetSubCurrIp');
+        if (bCurr) bCurr.textContent = cfg.currency || '$';
+    }
+
+    currentSettingsSubScreen = subScreen;
+    mainView.classList.add('slide-left');
+    subScreen.classList.add('active');
+    subScreen.scrollTop = 0;
 }
+
+function closeSettingsSubScreen() {
+    if (navigator.vibrate) navigator.vibrate(10);
+    const mainView = document.getElementById('iosSettingsMain');
+    if (currentSettingsSubScreen) {
+        currentSettingsSubScreen.classList.remove('active');
+        currentSettingsSubScreen = null;
+    }
+    if (mainView) {
+        mainView.classList.remove('slide-left');
+    }
+    updateSettingsSubValues();
+}
+
+function updateSettingsSubValues() {
+    const bSub = document.getElementById('budgetSub');
+    const dSub = document.getElementById('dailySubVal');
+    const tSub = document.getElementById('themeSub');
+    const lSub = document.getElementById('langSub');
+    const cSub = document.getElementById('currSub');
+    const catsCountSub = document.getElementById('catsCountSub');
+    const distSubVal = document.getElementById('distSubVal');
+
+    if (bSub) bSub.textContent = Number(cfg.weeklyBudget) > 0 ? curr(cfg.weeklyBudget) : t('notSet');
+    if (dSub) dSub.textContent = curr(cfg.dailyAmount || 1);
+    if (tSub) tSub.textContent = cfg.theme === 'dark' ? t('dark') : t('light');
+    if (lSub) lSub.textContent = { es: 'Español', en: 'English', fr: 'Français', pt: 'Português' }[cfg.lang] || 'Español';
+    if (cSub) cSub.textContent = cfg.currency + ' ' + ({ '$': 'USD', '€': 'EUR', '£': 'GBP', 'S/.': 'PEN', 'COP': 'COP', 'MXN': 'MXN' }[cfg.currency] || '');
+    if (catsCountSub) catsCountSub.textContent = categories.length;
+    if (distSubVal) distSubVal.textContent = categories.reduce((s, c) => s + (Number(c.percentage) || 0), 0) + '%';
+}
+
+function saveBudgetFromSubScreen() {
+    const bInp = document.getElementById('budgetSubInput');
+    const val = Math.max(0, parseFloat(bInp?.value) || 0);
+    cfg.weeklyBudget = val;
+    sv('cfg', cfg);
+    updateAll(true);
+    closeSettingsSubScreen();
+    showToast('💰 ' + t('settingsSaved'), 's');
+}
+
+function saveDailyFromSubScreen() {
+    const dInp = document.getElementById('setDaily');
+    const val = Math.max(0.01, parseFloat(dInp?.value) || 1);
+    cfg.dailyAmount = val;
+    sv('cfg', cfg);
+    updateAll(true);
+    closeSettingsSubScreen();
+    showToast('💵 ' + t('settingsSaved'), 's');
+}
+
+function renderThemeSubOptions() {
+    document.getElementById('optThemeDark')?.classList.toggle('selected', cfg.theme === 'dark');
+    document.getElementById('optThemeLight')?.classList.toggle('selected', cfg.theme === 'light');
+}
+
+function renderLangSubOptions() {
+    ['es', 'en', 'fr', 'pt'].forEach(l => {
+        const item = document.getElementById('optLang' + l.charAt(0).toUpperCase() + l.slice(1));
+        if (item) item.classList.toggle('selected', cfg.lang === l);
+    });
+}
+
+function renderCurrSubOptions() {
+    const currs = [['$', 'USD'], ['€', 'EUR'], ['£', 'GBP'], ['S/.', 'PEN'], ['COP', 'COP'], ['MXN', 'MXN']];
+    const ct = document.getElementById('currencyList');
+    if (ct) ct.innerHTML = currs.map(c => `<div class="compact-opt-item ${cfg.currency === c[0] ? 'selected' : ''}" onclick="setCurr('${c[0]}')"><div class="compact-opt-left"><div class="compact-opt-icon" style="background:var(--gd);color:var(--g)">${c[0]}</div><div class="compact-opt-label">${c[0]} ${c[1]}</div></div><div class="compact-opt-check">✓</div></div>`).join('');
+}
+
+function setTheme(th) {
+    if (navigator.vibrate) navigator.vibrate(10);
+    cfg.theme = th;
+    sv('cfg', cfg);
+    document.body.classList.toggle('theme-light', th === 'light');
+    renderThemeSubOptions();
+    updateSettingsSubValues();
+    showToast((th === 'dark' ? '🌙 ' : '☀️ ') + (th === 'dark' ? t('dark') : t('light')), 's');
+}
+
+function setLang(l) {
+    if (navigator.vibrate) navigator.vibrate(10);
+    cfg.lang = l;
+    lang = l;
+    sv('cfg', cfg);
+    applyTranslations();
+    renderLangSubOptions();
+    updateSettingsSubValues();
+    updateAll(true);
+    showToast('🌐 ' + ({ es: 'Español', en: 'English', fr: 'Français', pt: 'Português' }[l] || l), 's');
+}
+
+function setCurr(c) {
+    if (navigator.vibrate) navigator.vibrate(10);
+    cfg.currency = c;
+    sv('cfg', cfg);
+    renderCurrSubOptions();
+    updateSettingsSubValues();
+    updateAll(true);
+    showToast('💱 ' + c, 's');
+}
+
+function saveSettings() {
+    if (navigator.vibrate) navigator.vibrate(15);
+    const dInp = document.getElementById('setDaily');
+    if (dInp) cfg.dailyAmount = parseFloat(dInp.value) || 1;
+    sv('cfg', cfg);
+    closeModal('settingsModal');
+    showToast(t('settingsSaved') + ' ⚙️', 's');
+    updateAll(true);
+}
+
+function showImport() {
+    openSettingsSubScreen('importSubScreen');
+}
+
+function openSubScreen(id) {
+    if (id === 'themeScreen') openSettingsSubScreen('themeSubScreen');
+    else if (id === 'langScreen') openSettingsSubScreen('langSubScreen');
+    else if (id === 'currencyScreen') openSettingsSubScreen('currSubScreen');
+    else openModal(id);
+}
+function closeSubScreen(id) { closeSettingsSubScreen(); }
+function openSubModal(id) {
+    if (id === 'categoriesModal') {
+        openSettings();
+        openSettingsSubScreen('catsSubScreen');
+    } else if (id === 'distributionModal') {
+        openSettings();
+        openSettingsSubScreen('distSubScreen');
+    } else {
+        openModal(id);
+    }
+}
+function closeSubModal(id) { closeSettingsSubScreen(); }
 
 // ===== CATEGORIES & REDISTRIBUTION =====
 function getEffectiveCategoryDistribution(amt) {
@@ -3130,26 +3369,46 @@ function renderDistPreview() {
     const totalRec = getTotalFunds();
     ct.innerHTML = categories.map(cat => {
         const amt = totalRec * (cat.percentage / 100);
-        return `<div class="dist-item">
+        const isActive = cat.active !== false;
+        return `<div class="dist-item" style="${!isActive ? 'opacity:0.6;' : ''}">
             <div class="dist-icon" style="background:${cat.color}20;color:${cat.color}">${cat.icon}</div>
             <div class="dist-info">
-                <div class="dist-name">${cat.name} ${cat.active === false ? '<span style="font-size:10px;color:var(--m)">(Inactiva)</span>' : ''}</div>
+                <div class="dist-name">${cat.name} ${!isActive ? '<span style="font-size:10px;color:var(--m)">(Inactiva)</span>' : ''}</div>
                 <div class="dist-amt">${curr(amt)} · ${t('distAvailable')}: ${curr(getCatBalance(cat.id))}</div>
             </div>
-            <div style="display:flex;align-items:center;gap:4px">
-                <input type="number" class="pct-input" value="${cat.percentage}" min="0" max="100" step="1" onchange="updateCatPctInline('${cat.id}', this.value)" onfocus="this.select()">
-                <span style="font-size:13px;color:var(--m);font-weight:600">%</span>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+                <div style="display:flex;align-items:center;gap:3px">
+                    <input type="number" class="pct-input" value="${cat.percentage}" min="0" max="100" step="1" onchange="updateCatPctInline('${cat.id}', this.value)" onfocus="this.select()">
+                    <span style="font-size:13px;color:var(--m);font-weight:600">%</span>
+                </div>
+                <label class="ios-switch" title="${isActive ? 'Desactivar fondo' : 'Activar fondo'}">
+                    <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleCatActiveInline('${cat.id}', this.checked)">
+                    <span class="ios-slider"></span>
+                </label>
             </div>
         </div>`;
     }).join('');
     updateDistTotal();
 }
 
+function toggleCatActiveInline(catId, isChecked) {
+    const cat = categories.find(c => c.id === catId);
+    if (cat) {
+        cat.active = isChecked;
+        sv('categories', categories);
+        updateAll();
+        renderDistPreview();
+        renderCatList();
+        updateSettingsSubValues();
+        showToast((isChecked ? '✅ ' : '⏸️ ') + cat.name + ': ' + (isChecked ? 'Activa' : 'Inactiva'), 's');
+    }
+}
+
 function updateCatPctInline(catId, newPct) {
     const pct = parseFloat(newPct);
     if (isNaN(pct) || pct < 0 || pct > 100) { showToast(t('pctMustBePos'), 'e'); renderDistPreview(); return; }
     const cat = categories.find(c => c.id === catId);
-    if (cat) { cat.percentage = pct; sv('categories', categories); updateDistTotal(); updateAll(); showToast(t('catSaved') + ' ✅', 's'); }
+    if (cat) { cat.percentage = pct; sv('categories', categories); updateDistTotal(); updateAll(); updateSettingsSubValues(); showToast(t('catSaved') + ' ✅', 's'); }
 }
 
 function updateDistTotal() {
@@ -3172,6 +3431,9 @@ function openCatModal(editId) {
     selIconV = cat ? cat.icon : '🍔';
     selColorV = cat ? cat.color : '#34C759';
     renderIconGrid(); renderColorGrid();
+
+    const currIp = document.getElementById('catGoalCurrIp');
+    if (currIp) currIp.textContent = cfg.currency || '$';
 
     const hasGoal = cat ? !!cat.hasGoal : false;
     document.getElementById('catHasGoal').checked = hasGoal;
@@ -3263,6 +3525,8 @@ function saveCat() {
     renderExpCats();
     renderFunds();
     renderTransferSelectors();
+    updateDistTotal();
+    updateSettingsSubValues();
     updateAll();
 }
 
@@ -3284,6 +3548,8 @@ function deleteCat(id) {
     renderExpCats();
     renderFunds();
     renderTransferSelectors();
+    updateDistTotal();
+    updateSettingsSubValues();
     updateAll();
 }
 
@@ -4242,71 +4508,65 @@ if (nm) profile.name = nm.value.trim() || 'Estudiante';
 sv('profile', profile); closeModal('profileModal'); showToast(t('profileUpdated') + ' 👤', 's'); updateAll();
 }
 
-// ===== SETTINGS =====
-function openSettings() {
-document.getElementById('setDaily').value = cfg.dailyAmount;
-document.getElementById('impSec').style.display = 'none';
-document.getElementById('langSub').textContent = { es: 'Español', en: 'English', fr: 'Français', pt: 'Português' }[cfg.lang] || 'Español';
-document.getElementById('themeSub').textContent = cfg.theme === 'dark' ? t('dark') : t('light');
-document.getElementById('currSub').textContent = cfg.currency + ' ' + ({ '$': 'USD', '€': 'EUR', '£': 'GBP', 'S/.': 'PEN', 'COP': 'COP', 'MXN': 'MXN' }[cfg.currency] || '');
-document.getElementById('budgetSub').textContent = cfg.weeklyBudget > 0 ? curr(cfg.weeklyBudget) : t('notSet');
-openModal('settingsModal');
-}
-function setLang(l) { if (navigator.vibrate) navigator.vibrate(10); cfg.lang = l; lang = l; sv('cfg', cfg); applyTranslations(); renderSubScreen('langScreen'); updateAll(); }
-function setTheme(th) { if (navigator.vibrate) navigator.vibrate(10); cfg.theme = th; sv('cfg', cfg); document.body.classList.toggle('theme-light', th === 'light'); renderSubScreen('themeScreen'); document.getElementById('themeSub').textContent = th === 'dark' ? t('dark') : t('light'); }
-function setCurr(c) { if (navigator.vibrate) navigator.vibrate(10); cfg.currency = c; sv('cfg', cfg); renderSubScreen('currencyScreen'); updateAll(); }
-function saveSettings() {
-if (navigator.vibrate) navigator.vibrate(15);
-cfg.dailyAmount = parseFloat(document.getElementById('setDaily').value) || 1;
-sv('cfg', cfg); closeModal('settingsModal'); showToast(t('settingsSaved') + ' ⚙️', 's'); updateAll();
-}
-function showImport() { document.getElementById('impSec').style.display = 'block'; }
+// ===== DATA MANAGEMENT =====
 function exportJSON() {
-const data = { cfg, entries, expenses, fundsByCategory, fundHistory, goals, streak, lastDate, xp, achs, chals, chalDate, profile, curWeek, categories };
-const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a'); a.href = url; a.download = 'midinero_' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
-URL.revokeObjectURL(url); showToast(t('exported') + ' 📤', 's');
+    const data = { cfg, entries, expenses, fundsByCategory, fundHistory, goals, streak, lastDate, xp, achs, chals, chalDate, profile, curWeek, categories };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'midinero_' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
+    URL.revokeObjectURL(url); showToast(t('exported') + ' 📤', 's');
 }
 function exportCSV() {
-const rows = [['Fecha','Día','Recibido','Libre']];
-entries.forEach(e => rows.push([e.date, e.day, e.received, e.free]));
-const blob = new Blob([rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
-const url = URL.createObjectURL(blob);
-const a = document.createElement('a'); a.href = url; a.download = 'midinero_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
-URL.revokeObjectURL(url); showToast('CSV 📊', 's');
+    const rows = [['Fecha','Día','Recibido','Libre']];
+    entries.forEach(e => rows.push([e.date, e.day, e.received, e.free]));
+    const blob = new Blob([rows.map(r => r.join(',')).join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'midinero_' + new Date().toISOString().slice(0, 10) + '.csv'; a.click();
+    URL.revokeObjectURL(url); showToast('CSV 📊', 's');
 }
 function importData() {
-try {
-const d = JSON.parse(document.getElementById('impArea').value.trim());
-if (d.cfg) cfg = d.cfg;
-if (d.entries) entries = d.entries;
-if (d.expenses) expenses = d.expenses;
-if (d.fundsByCategory) fundsByCategory = d.fundsByCategory;
-if (d.fundHistory) fundHistory = d.fundHistory;
-if (d.goals) goals = d.goals;
-if (d.streak !== undefined) streak = d.streak;
-if (d.lastDate) lastDate = d.lastDate;
-if (d.xp !== undefined) xp = d.xp;
-if (d.achs) achs = d.achs;
-if (d.profile) profile = d.profile;
-if (d.curWeek) curWeek = d.curWeek;
-if (d.categories) categories = d.categories;
-lang = cfg.lang || 'es'; saveAll(); closeModal('settingsModal'); showToast(t('imported') + ' 📥', 's'); updateAll();
-} catch(e) { showToast(t('importErr') + ' ❌', 'e'); }
+    try {
+        const impEl = document.getElementById('impArea');
+        if (!impEl || !impEl.value.trim()) return;
+        const d = JSON.parse(impEl.value.trim());
+        if (d.cfg) cfg = d.cfg;
+        if (d.entries) entries = d.entries;
+        if (d.expenses) expenses = d.expenses;
+        if (d.fundsByCategory) fundsByCategory = d.fundsByCategory;
+        if (d.fundHistory) fundHistory = d.fundHistory;
+        if (d.goals) goals = d.goals;
+        if (d.streak !== undefined) streak = d.streak;
+        if (d.lastDate) lastDate = d.lastDate;
+        if (d.xp !== undefined) xp = d.xp;
+        if (d.achs) achs = d.achs;
+        if (d.profile) profile = d.profile;
+        if (d.curWeek) curWeek = d.curWeek;
+        if (d.categories) categories = d.categories;
+        lang = cfg.lang || 'es';
+        document.body.classList.toggle('theme-light', cfg.theme === 'light');
+        applyTranslations();
+        saveAll();
+        closeModal('settingsModal');
+        showToast(t('imported') + ' 📥', 's');
+        updateAll(true);
+        updateSettingsSubValues();
+    } catch(e) {
+        showToast(t('importErr') + ' ❌', 'e');
+    }
 }
 function resetAll() { if (confirm(t('confirmReset'))) { localStorage.clear(); location.reload(); } }
 function saveAll() {
-sv('cfg', cfg); sv('entries', entries); sv('expenses', expenses);
-sv('fundsByCategory', fundsByCategory); sv('fundHistory', fundHistory);
-sv('goals', goals); sv('streak', streak); sv('lastDate', lastDate);
-sv('xp', xp); sv('achs', achs); sv('chals', chals); sv('chalDate', chalDate);
-sv('profile', profile); sv('curWeek', curWeek); sv('categories', categories);
+    sv('cfg', cfg); sv('entries', entries); sv('expenses', expenses);
+    sv('fundsByCategory', fundsByCategory); sv('fundHistory', fundHistory);
+    sv('goals', goals); sv('streak', streak); sv('lastDate', lastDate);
+    sv('xp', xp); sv('achs', achs); sv('chals', chals); sv('chalDate', chalDate);
+    sv('profile', profile); sv('curWeek', curWeek); sv('categories', categories);
 }
 function applyTranslations() {
-document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); const val = t(key); if (val) el.textContent = val; });
-document.querySelectorAll('[data-i18n-ph]').forEach(el => { const key = el.getAttribute('data-i18n-ph'); const val = t(key); if (val) el.setAttribute('placeholder', val); });
-document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); const val = t(key); if (val) el.textContent = val; });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => { const key = el.getAttribute('data-i18n-ph'); const val = t(key); if (val) el.setAttribute('placeholder', val); });
+    document.documentElement.lang = lang;
+    updateSettingsSubValues();
 }
 
 // ===== TABS =====
@@ -4343,9 +4603,6 @@ if (force || curTab === 'tab-semana') {
 renderWeekNav();
 renderWeekSummary();
 renderBudgetCard();
-renderWeekDayChart();
-renderWeekCategories();
-renderWeekExpenses();
 renderFunds();
 }
 
@@ -4364,6 +4621,9 @@ el('sumEmg').textContent = categories.filter(c => getCatBalance(c.id) > 0).lengt
 if (el('healthScore')) { el('healthScore').textContent = health; el('healthScore').style.color = hl.c; }
 if (el('healthLbl')) el('healthLbl').textContent = hl.l;
 if (el('healthBar')) el('healthBar').style.width = health + '%';
+renderWeekDayChart();
+renderWeekCategories();
+renderWeekExpenses();
 drawPie(); renderTopCats(); renderHeatmap();
 }
 
