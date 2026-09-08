@@ -656,6 +656,8 @@ select.inp option{background:var(--bg2);color:var(--text)}
 .onboarding-dots{display:flex;justify-content:center;gap:6px;margin:20px 0 16px}.onboarding-dot{width:7px;height:7px;border-radius:50%;background:var(--b2)}.onboarding-dot.active{width:22px;border-radius:999px;background:var(--g)}.onboarding-actions{display:flex;gap:10px;align-items:center}.onboarding-actions .btn{flex:1}.onboarding-skip{border:0;background:none;color:var(--m);font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:12px}
 body.auth-locked{overflow:hidden}@media(max-width:480px){.auth-screen,.onboarding-screen{padding:16px}.auth-panel{padding:18px}.onboarding-card{padding:22px 18px}}
 </style>
+<script src="supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="particles" id="particles"></div>
@@ -1965,12 +1967,21 @@ body.auth-locked{overflow:hidden}@media(max-width:480px){.auth-screen,.onboardin
 
 <script>
 const SK = 'md6_';
+const SUPABASE_URL = window.MIDINERO_SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = window.MIDINERO_SUPABASE_ANON_KEY || '';
+const cloudEnabled = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase?.createClient);
+const supabaseClient = cloudEnabled ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const CLOUD_TABLE = 'user_data';
 const ACCOUNT_STORE_KEY = SK + 'accounts_v1';
 const SESSION_STORE_KEY = SK + 'session_v1';
 const ACCOUNT_DATA_KEYS = ['cfg','entries','expenses','fundsByCategory','fundHistory','goals','streak','lastDate','xp','achs','chals','chalDate','profile','curWeek','categories','whatIfPresets'];
 const _lsCache = new Map();
 let accountsStore = {};
 let currentUserId = null;
+let realtimeChannel = null;
+let cloudSaveTimer = null;
+let cloudSaveInFlight = false;
+let cloudSavePending = false;
 
 function readJSON(key, fallback) {
     try { const value = localStorage.getItem(key); return value === null ? fallback : JSON.parse(value); }
@@ -1979,6 +1990,67 @@ function readJSON(key, fallback) {
 function writeJSON(key, value) {
     try { localStorage.setItem(key, JSON.stringify(value)); return true; }
     catch(e) { return false; }
+}
+function cloudSnapshot() {
+    if (!currentUserId || !accountsStore[currentUserId]) return {};
+    return { ...(accountsStore[currentUserId].data || {}), _meta: { onboardingCompleted: Boolean(accountsStore[currentUserId].onboardingCompleted) } };
+}
+function findLocalMigrationData() {
+    const candidate = Object.values(accountsStore).find(account => account.id !== currentUserId && account.data && (account.data.entries?.length || account.data.expenses?.length || account.data.goals?.length || account.data.profile));
+    return candidate?.data || null;
+}
+function scheduleCloudSave() {
+    if (!cloudEnabled || !currentUserId) return;
+    cloudSavePending = true;
+    clearTimeout(cloudSaveTimer);
+    cloudSaveTimer = setTimeout(flushCloudSave, 250);
+}
+async function flushCloudSave() {
+    if (!cloudEnabled || !currentUserId || cloudSaveInFlight || !cloudSavePending) return;
+    cloudSaveInFlight = true;
+    cloudSavePending = false;
+    const { error } = await supabaseClient.from(CLOUD_TABLE).upsert({ user_id: currentUserId, data: cloudSnapshot(), updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+    cloudSaveInFlight = false;
+    if (error) { cloudSavePending = true; console.error('MiDinero cloud save failed', error); }
+    else if (cloudSavePending) flushCloudSave();
+}
+async function loadCloudData(userId) {
+    const { data, error } = await supabaseClient.from(CLOUD_TABLE).select('data').eq('user_id', userId).maybeSingle();
+    if (error) throw error;
+    return data?.data || null;
+}
+function stopRealtime() {
+    if (realtimeChannel && supabaseClient) supabaseClient.removeChannel(realtimeChannel);
+    realtimeChannel = null;
+}
+function startRealtime(userId) {
+    stopRealtime();
+    if (!cloudEnabled) return;
+    realtimeChannel = supabaseClient.channel('midinero-' + userId).on('postgres_changes', { event: '*', schema: 'public', table: CLOUD_TABLE, filter: 'user_id=eq.' + userId }, payload => {
+        if (payload.eventType === 'DELETE' || !payload.new?.data) return;
+        if (payload.new.updated_at && payload.new.updated_at === accountsStore[userId]?.cloudUpdatedAt) return;
+        if (!accountsStore[userId]) return;
+        accountsStore[userId].data = payload.new.data;
+        accountsStore[userId].cloudUpdatedAt = payload.new.updated_at;
+        writeJSON(ACCOUNT_STORE_KEY, accountsStore);
+        setRuntimeFromAccount(accountsStore[userId]);
+    }).subscribe();
+}
+async function loadCloudAccount(userId, email, name) {
+    const data = await loadCloudData(userId);
+    const record = accountsStore[userId] || createUserRecord(userId, email, name, '', data || freshAccountData());
+    record.email = email || record.email;
+    record.name = name || record.name;
+    record.data = data || record.data || findLocalMigrationData() || freshAccountData();
+    if (data?._meta?.onboardingCompleted !== undefined) record.onboardingCompleted = Boolean(data._meta.onboardingCompleted);
+    accountsStore[userId] = record;
+    currentUserId = userId;
+    writeJSON(ACCOUNT_STORE_KEY, accountsStore);
+    writeJSON(SESSION_STORE_KEY, currentUserId);
+    setRuntimeFromAccount(record);
+    startRealtime(userId);
+    if (!data) scheduleCloudSave();
+    return record;
 }
 function createUserRecord(id, email, name, passwordHash, data) {
     return { id, email, name: name || 'Estudiante', passwordHash: passwordHash || '', createdAt: Date.now(), onboardingCompleted: false, data: data || {} };
@@ -2016,6 +2088,7 @@ function persistActiveAccount() {
     if (!currentUserId || !accountsStore[currentUserId]) return;
     accountsStore[currentUserId].data = accountsStore[currentUserId].data || {};
     writeJSON(ACCOUNT_STORE_KEY, accountsStore);
+    scheduleCloudSave();
 }
 function sv(k, v) {
     try {
@@ -2036,6 +2109,7 @@ function ld(k, d) {
     return d;
 }
 initAccountStore();
+if (cloudEnabled) currentUserId = null;
 
 const _elCache = new Map();
 const el = id => {
@@ -2447,6 +2521,15 @@ async function createAccount() {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setAuthError('signupError', t('invalidEmail'));
     if (password.length < 6) return setAuthError('signupError', t('shortPassword'));
     if (password !== confirm) return setAuthError('signupError', t('passwordMismatch'));
+    if (cloudEnabled) {
+        const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { display_name: name || 'Estudiante' } } });
+        if (error) return setAuthError('signupError', error.message);
+        if (!data.user) return setAuthError('signupError', t('confirmEmail'));
+        if (!data.session) return setAuthError('signupError', t('confirmEmail') === 'confirmEmail' ? 'Revisa tu correo para confirmar la cuenta.' : t('confirmEmail'));
+        const record = await loadCloudAccount(data.user.id, data.user.email, name);
+        await flushCloudSave();
+        hideAuthScreen(); startOnboarding(); showToast(t('accountCreated'), 's'); return;
+    }
     if (Object.values(accountsStore).some(account => account.email === email)) return setAuthError('signupError', t('emailExists'));
     const id = 'user_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); const data = freshAccountData(); data.profile.name = name || 'Estudiante';
     accountsStore[id] = createUserRecord(id, email, name, await hashPassword(password), data); currentUserId = id; writeJSON(ACCOUNT_STORE_KEY, accountsStore); writeJSON(SESSION_STORE_KEY, currentUserId); setRuntimeFromAccount(accountsStore[id]); hideAuthScreen(); startOnboarding(); showToast(t('accountCreated'), 's');
@@ -2454,10 +2537,26 @@ async function createAccount() {
 async function loginAccount() {
     const email = document.getElementById('loginEmail').value.trim().toLowerCase(); const password = document.getElementById('loginPassword').value; const account = Object.values(accountsStore).find(item => item.email === email);
     setAuthError('loginError', '');
+    if (cloudEnabled) {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error || !data.user) return setAuthError('loginError', error?.message || t('invalidLogin'));
+        const record = await loadCloudAccount(data.user.id, data.user.email, data.user.user_metadata?.display_name || 'Estudiante');
+        hideAuthScreen(); if (!record.onboardingCompleted) startOnboarding(); return;
+    }
     if (!account || (account.passwordHash && account.passwordHash !== await hashPassword(password))) return setAuthError('loginError', t('invalidLogin'));
     currentUserId = account.id; writeJSON(SESSION_STORE_KEY, currentUserId); setRuntimeFromAccount(account); hideAuthScreen(); if (!account.onboardingCompleted) startOnboarding();
 }
-function logoutAccount() { persistActiveAccount(); currentUserId = null; writeJSON(SESSION_STORE_KEY, null); showAuthScreen(); }
+async function logoutAccount() { if (cloudEnabled) { await flushCloudSave(); stopRealtime(); await supabaseClient.auth.signOut(); } else { persistActiveAccount(); } currentUserId = null; _lsCache.clear(); writeJSON(SESSION_STORE_KEY, null); showAuthScreen(); }
+async function initCloudSession() {
+    if (!cloudEnabled) return false;
+    const { data } = await supabaseClient.auth.getSession();
+    if (!data.session?.user) return false;
+    const user = data.session.user;
+    const record = await loadCloudAccount(user.id, user.email, user.user_metadata?.display_name || 'Estudiante');
+    hideAuthScreen();
+    if (!record.onboardingCompleted) startOnboarding();
+    return true;
+}
 const ONBOARDING_STEPS = [
     ['onb1Title','onb1Text','👋',['💰','📊']],['onb2Title','onb2Text','💵',['＋','💵']],['onb3Title','onb3Text','📂',['🍔','🏠','🎯']],['onb4Title','onb4Text','🛒',['🛒','−','💰']],['onb5Title','onb5Text','🎯',['🎯','📈']],['onb6Title','onb6Text','📊',['📊','📈','💳']],['onb7Title','onb7Text','✨',['🏆','🔥','🧠']]
 ];
@@ -4854,7 +4953,7 @@ function saveProfile() {
 
 // ===== DATA MANAGEMENT =====
 function exportJSON() {
-    const data = { cfg, entries, expenses, fundsByCategory, fundHistory, goals, streak, lastDate, xp, achs, chals, chalDate, profile, curWeek, categories };
+    const data = { cfg, entries, expenses, fundsByCategory, fundHistory, goals, streak, lastDate, xp, achs, chals, chalDate, profile, curWeek, categories, whatIfPresets };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = 'midinero_' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
@@ -4889,6 +4988,7 @@ function importData() {
         if (d.profile) profile = d.profile;
         if (d.curWeek) curWeek = d.curWeek;
         if (d.categories) categories = d.categories;
+        if (d.whatIfPresets) whatIfPresets = d.whatIfPresets;
         lang = cfg.lang || 'es';
         cachedThemeColors = null;
         document.body.classList.toggle('theme-light', cfg.theme === 'light');
@@ -5120,8 +5220,12 @@ function updateAll(force = false) {
 let searchDebounceTimer = null;
 let resizeDebounceTimer = null;
 
-window.addEventListener('load', () => {
-    if (currentUserId && accountsStore[currentUserId]) setRuntimeFromAccount(accountsStore[currentUserId]);
+window.addEventListener('load', async () => {
+    if (cloudEnabled) {
+        currentUserId = null;
+        const restored = await initCloudSession().catch(error => { console.error('MiDinero cloud session failed', error); return false; });
+        if (!restored) showAuthScreen();
+    } else if (currentUserId && accountsStore[currentUserId]) setRuntimeFromAccount(accountsStore[currentUserId]);
     else showAuthScreen();
     if (cfg.theme === 'light') document.body.classList.add('theme-light');
     lang = cfg.lang || 'es';
