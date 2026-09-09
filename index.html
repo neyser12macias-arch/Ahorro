@@ -53,6 +53,7 @@ background:radial-gradient(circle at 50% 15%, rgba(48,209,88,0.04) 0%, rgba(10,1
 pointer-events:none;z-index:0;
 }
 ::-webkit-scrollbar{width:0;height:0;display:none}
+@keyframes splashIn{0%{transform:scale(0.8) rotate(-10deg);opacity:0}60%{transform:scale(1.05) rotate(2deg)}100%{transform:scale(1) rotate(0);opacity:1}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes tabIn{from{opacity:0;transform:translateY(10px) scale(0.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes scaleB{from{opacity:0;transform:scale(0.88)}60%{transform:scale(1.03)}to{opacity:1;transform:scale(1)}}
@@ -68,6 +69,17 @@ pointer-events:none;z-index:0;
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes warnPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,159,10,0.35)}50%{box-shadow:0 0 0 10px rgba(255,159,10,0)}}
 @keyframes dangerPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,69,58,0.35)}50%{box-shadow:0 0 0 10px rgba(255,69,58,0)}}
+
+#splash{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s var(--ease-smooth),transform 0.6s var(--ease-smooth)}
+#splash.hide{opacity:0;transform:scale(1.04);pointer-events:none}
+.splash-ring{width:96px;height:96px;border-radius:26px;position:relative;animation:scaleB 0.8s var(--ease-spring) both;background:linear-gradient(135deg,var(--g),var(--c),var(--v));padding:2px;box-shadow:0 16px 40px rgba(48,209,88,0.25)}
+.splash-inner{width:100%;height:100%;background:var(--bg);border-radius:24px;display:flex;align-items:center;justify-content:center}
+.splash-inner svg{width:42px;height:42px}
+.splash-ring::after{content:'';position:absolute;inset:-4px;border-radius:30px;background:linear-gradient(135deg,var(--g),var(--v),var(--p),var(--o),var(--g));animation:spin 4s linear infinite;z-index:-1;opacity:0.45;filter:blur(10px)}
+#splash h1{font-size:28px;font-weight:800;color:var(--text);margin-top:18px;letter-spacing:-0.5px;animation:fadeUp 0.6s 0.3s both}
+#splash p{color:var(--m);font-size:14px;margin-top:4px;font-weight:500;animation:fadeUp 0.6s 0.45s both}
+.splash-bar{width:120px;height:3px;background:var(--b2);border-radius:999px;margin-top:22px;overflow:hidden;animation:fadeUp 0.6s 0.6s both}
+.splash-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--g),var(--c));border-radius:999px;transition:width 0.8s var(--ease-smooth)}
 
 .hdr{position:sticky;top:0;z-index:80;backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);background:rgba(0,0,0,0.65);border-bottom:1px solid var(--b);transition:0.18s;box-shadow:0 4px 20px rgba(0,0,0,0.25);transform:translateZ(0)}
 .theme-light .hdr{background:rgba(244,245,249,0.85);box-shadow:0 4px 20px rgba(0,0,0,0.04)}
@@ -636,59 +648,22 @@ select.inp option{background:var(--bg2);color:var(--text)}
 @media(min-width:481px){main{padding:8px 20px 140px}}
 @media(min-width:768px){main{max-width:620px;padding:12px 24px 140px}}
 @media(min-width:1024px){main{max-width:740px}}
-.auth-screen{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;background:var(--bg);overflow-y:auto}
-.auth-screen.show{display:flex}
-.auth-shell{width:min(100%,420px);animation:fadeUp .35s var(--ease-smooth) both}
-.auth-brand{text-align:center;margin-bottom:24px}
-.auth-brand-mark{width:72px;height:72px;margin:0 auto 14px;border-radius:22px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--g),var(--c));box-shadow:0 12px 32px rgba(48,209,88,.25)}
-.auth-brand-mark svg{width:34px;height:34px;color:#000}
-.auth-brand h1{font-size:28px;font-weight:800;letter-spacing:-.5px}
-.auth-brand p{margin-top:5px;color:var(--m);font-size:14px}
-.auth-panel{background:var(--card);border:1px solid var(--b);border-top-color:var(--b2);border-radius:22px;padding:22px;box-shadow:var(--glass-highlight),var(--glass-shadow);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-.auth-title{font-size:22px;font-weight:800;margin-bottom:5px}.auth-subtitle{font-size:13px;color:var(--m);line-height:1.45;margin-bottom:18px}
-.auth-label{display:block;font-size:12px;color:var(--m);font-weight:700;margin:0 0 6px 2px}.auth-field{margin-bottom:12px}.auth-field .inp{padding-left:14px}
-.auth-error{display:none;background:var(--rd);border:1px solid rgba(255,69,58,.25);border-radius:12px;padding:10px 12px;color:var(--r);font-size:12px;font-weight:600;margin-bottom:12px;line-height:1.4}.auth-error.show{display:block}
-.auth-switch{text-align:center;color:var(--m);font-size:12px;margin-top:17px}.auth-link{border:0;background:none;color:var(--g);font:inherit;font-weight:800;cursor:pointer;padding:0 2px}.auth-back{border:0;background:none;color:var(--g);font:inherit;font-weight:700;cursor:pointer;padding:0;margin-bottom:16px}
-.onboarding-screen{position:fixed;inset:0;z-index:1001;display:none;align-items:center;justify-content:center;padding:24px;background:var(--bg);overflow-y:auto}.onboarding-screen.show{display:flex}
-.onboarding-shell{width:min(100%,520px);text-align:center;animation:fadeUp .35s var(--ease-smooth) both}.onboarding-icon{width:92px;height:92px;border-radius:28px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--g),var(--c));box-shadow:0 16px 40px rgba(48,209,88,.22);font-size:42px}
-.onboarding-card{background:var(--card);border:1px solid var(--b);border-top-color:var(--b2);border-radius:22px;padding:26px 22px;box-shadow:var(--glass-highlight),var(--glass-shadow);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
-.onboarding-card h1{font-size:25px;font-weight:800;margin-bottom:10px}.onboarding-card p{font-size:14px;color:var(--m);line-height:1.55;min-height:66px}.onboarding-demo{display:flex;justify-content:center;gap:8px;margin:20px 0 4px}.onboarding-demo span{display:flex;align-items:center;justify-content:center;width:54px;height:48px;border-radius:12px;background:var(--gd);color:var(--g);font-size:22px;border:1px solid rgba(48,209,88,.2)}
-.onboarding-dots{display:flex;justify-content:center;gap:6px;margin:20px 0 16px}.onboarding-dot{width:7px;height:7px;border-radius:50%;background:var(--b2)}.onboarding-dot.active{width:22px;border-radius:999px;background:var(--g)}.onboarding-actions{display:flex;gap:10px;align-items:center}.onboarding-actions .btn{flex:1}.onboarding-skip{border:0;background:none;color:var(--m);font:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:12px}
-body.auth-locked{overflow:hidden}@media(max-width:480px){.auth-screen,.onboarding-screen{padding:16px}.auth-panel{padding:18px}.onboarding-card{padding:22px 18px}}
 </style>
-<script src="supabase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="particles" id="particles"></div>
 <div class="confcont" id="confcont"></div>
 
-<section class="auth-screen" id="authScreen">
-<div class="auth-shell">
-<div class="auth-brand"><div class="auth-brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg></div><h1>MiDinero</h1><p data-i18n="authTagline">Tu dinero, tus reglas 💪</p></div>
-<div class="auth-panel" id="loginPanel">
-<div class="auth-title" data-i18n="loginTitle">Iniciar sesión</div><div class="auth-subtitle" data-i18n="loginSubtitle">Tu espacio financiero personal.</div>
-<div class="auth-error" id="loginError"></div>
-<div class="auth-field"><label class="auth-label" for="loginEmail" data-i18n="email">Correo electrónico</label><input class="inp" id="loginEmail" type="email" autocomplete="email" data-i18n-ph="emailPlaceholder" placeholder="Tu correo electrónico"></div>
-<div class="auth-field"><label class="auth-label" for="loginPassword" data-i18n="password">Contraseña</label><input class="inp" id="loginPassword" type="password" autocomplete="current-password" data-i18n-ph="passwordPlaceholder" placeholder="Tu contraseña"></div>
-<button class="btn g" type="button" onclick="loginAccount()" data-i18n="login">Iniciar sesión</button>
-<div class="auth-switch"><span data-i18n="noAccount">¿No tienes una cuenta?</span> <button class="auth-link" type="button" onclick="showAuthPanel('signupPanel')" data-i18n="createAccount">Crear cuenta</button></div>
-</div>
-<div class="auth-panel" id="signupPanel" style="display:none">
-<button class="auth-back" type="button" onclick="showAuthPanel('loginPanel')" data-i18n="backToLogin">‹ Iniciar sesión</button>
-<div class="auth-title" data-i18n="createAccountTitle">Crear tu cuenta</div><div class="auth-subtitle" data-i18n="createAccountSubtitle">Empieza a organizar tu dinero de forma personal.</div>
-<div class="auth-error" id="signupError"></div>
-<div class="auth-field"><label class="auth-label" for="signupName" data-i18n="name">Nombre</label><input class="inp" id="signupName" autocomplete="name" data-i18n-ph="namePlaceholder" placeholder="¿Cómo te llamas?"></div>
-<div class="auth-field"><label class="auth-label" for="signupEmail" data-i18n="email">Correo electrónico</label><input class="inp" id="signupEmail" type="email" autocomplete="email" data-i18n-ph="emailPlaceholder" placeholder="Tu correo electrónico"></div>
-<div class="auth-field"><label class="auth-label" for="signupPassword" data-i18n="password">Contraseña</label><input class="inp" id="signupPassword" type="password" autocomplete="new-password" data-i18n-ph="newPasswordPlaceholder" placeholder="Crea una contraseña"></div>
-<div class="auth-field"><label class="auth-label" for="signupConfirm" data-i18n="confirmPassword">Confirmar contraseña</label><input class="inp" id="signupConfirm" type="password" autocomplete="new-password" data-i18n-ph="confirmPasswordPlaceholder" placeholder="Repite tu contraseña"></div>
-<button class="btn g" type="button" onclick="createAccount()" data-i18n="createAccount">Crear cuenta</button>
-<div class="auth-switch"><span data-i18n="hasAccount">¿Ya tienes una cuenta?</span> <button class="auth-link" type="button" onclick="showAuthPanel('loginPanel')" data-i18n="login">Iniciar sesión</button></div>
+<div id="splash">
+<div class="splash-ring">
+<div class="splash-inner">
+<svg viewBox="0 0 24 24" fill="none" stroke="var(--g)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
 </div>
 </div>
-</section>
-
-<section class="onboarding-screen" id="onboardingScreen"><div class="onboarding-shell"><div class="onboarding-icon" id="onboardingIcon">💰</div><div class="onboarding-card"><h1 id="onboardingTitle"></h1><p id="onboardingText"></p><div class="onboarding-demo" id="onboardingDemo"></div><div class="onboarding-dots" id="onboardingDots"></div><div class="onboarding-actions"><button class="onboarding-skip" type="button" onclick="skipOnboarding()" data-i18n="skip">Saltar</button><button class="btn g" type="button" onclick="nextOnboarding()" id="onboardingNext"></button></div></div></div></section>
+<h1>MiDinero</h1>
+<p data-i18n="splashSub">Tu dinero, tus reglas 💪</p>
+<div class="splash-bar"><div class="splash-bar-fill"></div></div>
+</div>
 
 <header class="hdr">
 <div class="hdr-in">
@@ -829,17 +804,6 @@ body.auth-locked{overflow:hidden}@media(max-width:480px){.auth-screen,.onboardin
     <!-- Vista Principal de Ajustes (iOS Main View) -->
     <div class="ios-settings-main" id="iosSettingsMain" style="padding:16px 18px 24px;overflow-y:auto;max-height:min(78vh,640px)">
         <div class="modal-subtitle" data-i18n="settingsDesc" style="margin-bottom:16px">Personaliza tu experiencia</div>
-
-        <div class="settings-section">
-            <div class="settings-section-title" data-i18n="account">CUENTA</div>
-            <div class="settings-group">
-                <div class="settings-item">
-                    <div class="settings-item-left"><div class="settings-item-icon" style="background:var(--gd);color:var(--g)">👤</div><div class="settings-item-text"><div class="settings-item-title" id="accountName">Estudiante</div><div class="settings-item-sub" id="accountEmail">local@midinero.app</div></div></div>
-                </div>
-                <div class="settings-item" onclick="startOnboarding()"><div class="settings-item-left"><div class="settings-item-icon" style="background:var(--vd);color:var(--v)">📖</div><div class="settings-item-text"><div class="settings-item-title" data-i18n="tutorial">Tutorial de MiDinero</div><div class="settings-item-sub" data-i18n="tutorialDesc">Vuelve a conocer cómo funciona la aplicación.</div></div></div><div class="settings-item-arrow">›</div></div>
-                <div class="settings-item" onclick="openLogoutModal()"><div class="settings-item-left"><div class="settings-item-icon" style="background:var(--rd);color:var(--r)">↪</div><div class="settings-item-text"><div class="settings-item-title" style="color:var(--r)" data-i18n="logout">Cerrar sesión</div></div></div><div class="settings-item-arrow" style="color:var(--r)">›</div></div>
-            </div>
-        </div>
 
         <!-- SEMANAL -->
         <div class="settings-section">
@@ -1243,10 +1207,6 @@ body.auth-locked{overflow:hidden}@media(max-width:480px){.auth-screen,.onboardin
 </div>
 </div>
 </div>
-</div>
-
-<div class="mo" id="logoutModal" onclick="if(event.target===this)closeModal('logoutModal')">
-<div class="mb" style="width:min(90vw,360px)"><div class="modal-header"><div class="modal-header-title" data-i18n="logoutTitle">¿Cerrar sesión?</div><button class="modal-close-btn" onclick="closeModal('logoutModal')" aria-label="Cerrar">✕</button></div><div class="mb-body"><div class="modal-subtitle" data-i18n="logoutDesc">Tus datos permanecerán guardados en tu cuenta.</div><div class="ma"><button class="mbtn cn" onclick="closeModal('logoutModal')" data-i18n="cancel">Cancelar</button><button class="mbtn ok p" onclick="confirmLogout()" data-i18n="logout">Cerrar sesión</button></div></div></div>
 </div>
 
 <main>
@@ -1967,149 +1927,25 @@ body.auth-locked{overflow:hidden}@media(max-width:480px){.auth-screen,.onboardin
 
 <script>
 const SK = 'md6_';
-const SUPABASE_URL = window.MIDINERO_SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = window.MIDINERO_SUPABASE_ANON_KEY || '';
-const cloudEnabled = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase?.createClient);
-const supabaseClient = cloudEnabled ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-const CLOUD_TABLE = 'user_data';
-const ACCOUNT_STORE_KEY = SK + 'accounts_v1';
-const SESSION_STORE_KEY = SK + 'session_v1';
-const ACCOUNT_DATA_KEYS = ['cfg','entries','expenses','fundsByCategory','fundHistory','goals','streak','lastDate','xp','achs','chals','chalDate','profile','curWeek','categories','whatIfPresets'];
 const _lsCache = new Map();
-let accountsStore = {};
-let currentUserId = null;
-let realtimeChannel = null;
-let cloudSaveTimer = null;
-let cloudSaveInFlight = false;
-let cloudSavePending = false;
-
-function readJSON(key, fallback) {
-    try { const value = localStorage.getItem(key); return value === null ? fallback : JSON.parse(value); }
-    catch(e) { return fallback; }
-}
-function writeJSON(key, value) {
-    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
-    catch(e) { return false; }
-}
-function cloudSnapshot() {
-    if (!currentUserId || !accountsStore[currentUserId]) return {};
-    return { ...(accountsStore[currentUserId].data || {}), _meta: { onboardingCompleted: Boolean(accountsStore[currentUserId].onboardingCompleted) } };
-}
-function findLocalMigrationData() {
-    const candidate = Object.values(accountsStore).find(account => account.id !== currentUserId && account.data && (account.data.entries?.length || account.data.expenses?.length || account.data.goals?.length || account.data.profile));
-    return candidate?.data || null;
-}
-function scheduleCloudSave() {
-    if (!cloudEnabled || !currentUserId) return;
-    cloudSavePending = true;
-    clearTimeout(cloudSaveTimer);
-    cloudSaveTimer = setTimeout(flushCloudSave, 250);
-}
-async function flushCloudSave() {
-    if (!cloudEnabled || !currentUserId || cloudSaveInFlight || !cloudSavePending) return;
-    cloudSaveInFlight = true;
-    cloudSavePending = false;
-    const { error } = await supabaseClient.from(CLOUD_TABLE).upsert({ user_id: currentUserId, data: cloudSnapshot(), updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
-    cloudSaveInFlight = false;
-    if (error) { cloudSavePending = true; console.error('MiDinero cloud save failed', error); }
-    else if (cloudSavePending) flushCloudSave();
-}
-async function loadCloudData(userId) {
-    const { data, error } = await supabaseClient.from(CLOUD_TABLE).select('data').eq('user_id', userId).maybeSingle();
-    if (error) throw error;
-    return data?.data || null;
-}
-function stopRealtime() {
-    if (realtimeChannel && supabaseClient) supabaseClient.removeChannel(realtimeChannel);
-    realtimeChannel = null;
-}
-function startRealtime(userId) {
-    stopRealtime();
-    if (!cloudEnabled) return;
-    realtimeChannel = supabaseClient.channel('midinero-' + userId).on('postgres_changes', { event: '*', schema: 'public', table: CLOUD_TABLE, filter: 'user_id=eq.' + userId }, payload => {
-        if (payload.eventType === 'DELETE' || !payload.new?.data) return;
-        if (payload.new.updated_at && payload.new.updated_at === accountsStore[userId]?.cloudUpdatedAt) return;
-        if (!accountsStore[userId]) return;
-        accountsStore[userId].data = payload.new.data;
-        accountsStore[userId].cloudUpdatedAt = payload.new.updated_at;
-        writeJSON(ACCOUNT_STORE_KEY, accountsStore);
-        setRuntimeFromAccount(accountsStore[userId]);
-    }).subscribe();
-}
-async function loadCloudAccount(userId, email, name) {
-    const data = await loadCloudData(userId);
-    const record = accountsStore[userId] || createUserRecord(userId, email, name, '', data || freshAccountData());
-    record.email = email || record.email;
-    record.name = name || record.name;
-    record.data = data || record.data || findLocalMigrationData() || freshAccountData();
-    if (data?._meta?.onboardingCompleted !== undefined) record.onboardingCompleted = Boolean(data._meta.onboardingCompleted);
-    accountsStore[userId] = record;
-    currentUserId = userId;
-    writeJSON(ACCOUNT_STORE_KEY, accountsStore);
-    writeJSON(SESSION_STORE_KEY, currentUserId);
-    setRuntimeFromAccount(record);
-    startRealtime(userId);
-    if (!data) scheduleCloudSave();
-    return record;
-}
-function createUserRecord(id, email, name, passwordHash, data) {
-    return { id, email, name: name || 'Estudiante', passwordHash: passwordHash || '', createdAt: Date.now(), onboardingCompleted: false, data: data || {} };
-}
-function readLegacyData() {
-    const data = {};
-    let found = false;
-    ACCOUNT_DATA_KEYS.forEach(k => {
-        const raw = localStorage.getItem(SK + k);
-        if (raw !== null) { data[k] = readJSON(SK + k, null); found = true; }
-    });
-    return found ? data : null;
-}
-function initAccountStore() {
-    accountsStore = readJSON(ACCOUNT_STORE_KEY, {});
-    currentUserId = readJSON(SESSION_STORE_KEY, null);
-    if (!Object.keys(accountsStore).length) {
-        const legacy = readLegacyData();
-        if (legacy) {
-            const id = 'local_' + Date.now();
-            const legacyProfile = legacy.profile || { name: 'Estudiante', avatar: '🎓' };
-            accountsStore[id] = createUserRecord(id, 'local@midinero.app', legacyProfile.name, '', legacy);
-            accountsStore[id].onboardingCompleted = true;
-            currentUserId = id;
-            writeJSON(ACCOUNT_STORE_KEY, accountsStore);
-            writeJSON(SESSION_STORE_KEY, currentUserId);
-            ACCOUNT_DATA_KEYS.forEach(k => localStorage.removeItem(SK + k));
-        }
-    }
-}
-function activeAccountData() {
-    return currentUserId && accountsStore[currentUserId] ? accountsStore[currentUserId].data : {};
-}
-function persistActiveAccount() {
-    if (!currentUserId || !accountsStore[currentUserId]) return;
-    accountsStore[currentUserId].data = accountsStore[currentUserId].data || {};
-    writeJSON(ACCOUNT_STORE_KEY, accountsStore);
-    scheduleCloudSave();
-}
-function sv(k, v) {
+const sv = (k, v) => {
     try {
-        if (!currentUserId || !accountsStore[currentUserId]) return;
         const str = JSON.stringify(v);
         if (_lsCache.get(k) === str) return;
         _lsCache.set(k, str);
-        accountsStore[currentUserId].data[k] = v;
-        persistActiveAccount();
+        localStorage.setItem(SK + k, str);
     } catch(e) {}
-}
-function ld(k, d) {
-    const data = activeAccountData();
-    if (Object.prototype.hasOwnProperty.call(data, k)) {
-        _lsCache.set(k, JSON.stringify(data[k]));
-        return data[k];
-    }
-    return d;
-}
-initAccountStore();
-if (cloudEnabled) currentUserId = null;
+};
+const ld = (k, d) => {
+    try {
+        const v = localStorage.getItem(SK + k);
+        if (v !== null) {
+            _lsCache.set(k, v);
+            return JSON.parse(v);
+        }
+        return d;
+    } catch(e) { return d; }
+};
 
 const _elCache = new Map();
 const el = id => {
@@ -2136,10 +1972,7 @@ function getThemeColors() {
 
 const I18N = {
 es: {
-authTagline:'Tu dinero, tus reglas 💪',loginTitle:'Iniciar sesión',loginSubtitle:'Tu espacio financiero personal.',email:'Correo electrónico',emailPlaceholder:'Tu correo electrónico',password:'Contraseña',passwordPlaceholder:'Tu contraseña',newPasswordPlaceholder:'Crea una contraseña',confirmPassword:'Confirmar contraseña',confirmPasswordPlaceholder:'Repite tu contraseña',login:'Iniciar sesión',noAccount:'¿No tienes una cuenta?',createAccount:'Crear cuenta',backToLogin:'‹ Iniciar sesión',createAccountTitle:'Crear tu cuenta',createAccountSubtitle:'Empieza a organizar tu dinero de forma personal.',name:'Nombre',namePlaceholder:'¿Cómo te llamas?',hasAccount:'¿Ya tienes una cuenta?',skip:'Saltar',continue:'Continuar →',startApp:'Empezar con MiDinero',
-invalidEmail:'Introduce un correo válido.',shortPassword:'La contraseña debe tener al menos 6 caracteres.',passwordMismatch:'Las contraseñas no coinciden.',emailExists:'Este correo ya tiene una cuenta.',invalidLogin:'Correo o contraseña incorrectos.',accountCreated:'Cuenta creada correctamente.',logoutTitle:'¿Cerrar sesión?',logoutDesc:'Tus datos permanecerán guardados en tu cuenta.',logout:'Cerrar sesión',account:'Cuenta',help:'AYUDA',tutorial:'Tutorial de MiDinero',tutorialDesc:'Vuelve a conocer cómo funciona la aplicación.',
-onb1Title:'Bienvenido a MiDinero 👋',onb1Text:'Aquí puedes organizar tu dinero, controlar tus gastos y ver cómo evoluciona tu situación financiera.',onb2Title:'Registra el dinero que recibes 💵',onb2Text:'Cada vez que recibas dinero, puedes registrarlo para mantener actualizado tu balance.',onb3Title:'Organiza tu dinero en categorías 📂',onb3Text:'Crea tus propias categorías y decide qué porcentaje de tu dinero quieres asignar a cada una.',onb4Title:'Registra tus gastos 🛒',onb4Text:'Cada gasto se descuenta de la categoría correspondiente para que sepas dónde utilizas tu dinero.',onb5Title:'Crea metas 🎯',onb5Text:'Define algo que quieres conseguir y sigue tu progreso hasta alcanzarlo.',onb6Title:'Entiende tus números 📊',onb6Text:'Consulta tus gastos, ingresos, fondos, evolución y estadísticas.',onb7Title:'Mucho más por descubrir ✨',onb7Text:'Retos, logros, rachas, test de compra, escenarios, historial, presupuesto y salud financiera.',onbDoneTitle:'Todo listo 🚀',onbDoneText:'Ya conoces lo básico. Ahora empieza a organizar tu dinero a tu manera.',
-celebClose:'¡Genial!',expense:'🛒 Registrar Gasto',whichFund:'¿De qué fondo sale este gasto?',
+splashSub:'Tu dinero, tus reglas 💪',celebClose:'¡Genial!',expense:'🛒 Registrar Gasto',whichFund:'¿De qué fondo sale este gasto?',
 whatBought:'¿Qué compraste?',howMuch:'¿Cuánto costó?',category:'Categoría:',cancel:'Cancelar',save:'Guardar',
 goalTitle:'Meta de Compra 🎯',whatWant:'¿Qué quieres comprar?',goalEx:'Ej: Audífonos Bluetooth',
 price:'Precio',deadline:'Fecha límite (opcional)',priorityGoal:'⭐ Meta prioritaria',savingTip:'Ahorrando',day:'día',
@@ -2233,8 +2066,7 @@ savings:'Ahorro',emergency:'Emergencia',rewards:'Ocio',education:'Educación',in
 useEmergency:'Usar Fondo de Emergencia 🛡️',whyNeed:'¿Por qué necesitas el fondo?',reason:'Motivo...',howMuchNeed:'¿Cuánto necesitas?',confirm:'Confirmar',
 },
 en: {
-authTagline:'Your money, your rules 💪',loginTitle:'Sign in',loginSubtitle:'Your personal financial space.',email:'Email',emailPlaceholder:'Your email',password:'Password',passwordPlaceholder:'Your password',newPasswordPlaceholder:'Create a password',confirmPassword:'Confirm password',confirmPasswordPlaceholder:'Repeat your password',login:'Sign in',noAccount:'Don\'t have an account?',createAccount:'Create account',backToLogin:'‹ Sign in',createAccountTitle:'Create your account',createAccountSubtitle:'Start organizing your money personally.',name:'Name',namePlaceholder:'What is your name?',hasAccount:'Already have an account?',skip:'Skip',continue:'Continue →',startApp:'Start with MiDinero',invalidEmail:'Enter a valid email.',shortPassword:'Password must be at least 6 characters.',passwordMismatch:'Passwords do not match.',emailExists:'This email already has an account.',invalidLogin:'Incorrect email or password.',accountCreated:'Account created successfully.',logoutTitle:'Sign out?',logoutDesc:'Your data will remain saved in your account.',logout:'Sign out',account:'Account',help:'HELP',tutorial:'MiDinero tutorial',tutorialDesc:'Learn how the app works again.',onb1Title:'Welcome to MiDinero 👋',onb1Text:'Organize your money, control expenses and understand your financial progress.',onb2Title:'Record money you receive 💵',onb2Text:'Record every income to keep your balance up to date.',onb3Title:'Organize money into categories 📂',onb3Text:'Create custom categories and choose the percentage assigned to each.',onb4Title:'Record your expenses 🛒',onb4Text:'Each expense is deducted from its category so you know where money goes.',onb5Title:'Create goals 🎯',onb5Text:'Define what you want to achieve and follow your progress.',onb6Title:'Understand your numbers 📊',onb6Text:'Review expenses, income, funds, trends and statistics.',onb7Title:'More to discover ✨',onb7Text:'Challenges, achievements, streaks, purchase test, scenarios, history, budgets and financial health.',onbDoneTitle:'All set 🚀',onbDoneText:'You know the basics. Start organizing your money your way.',
-celebClose:'Awesome!',expense:'🛒 Log Expense',whichFund:'Which fund does this expense come from?',
+splashSub:'Your money, your rules 💪',celebClose:'Awesome!',expense:'🛒 Log Expense',whichFund:'Which fund does this expense come from?',
 whatBought:'What did you buy?',howMuch:'How much did it cost?',category:'Category:',cancel:'Cancel',save:'Save',
 goalTitle:'Purchase Goal 🎯',whatWant:'What do you want to buy?',goalEx:'E.g.: Bluetooth Headphones',
 price:'Price',deadline:'Deadline (optional)',priorityGoal:'⭐ Priority goal',savingTip:'Saving',day:'day',
@@ -2328,7 +2160,7 @@ savings:'Savings',emergency:'Emergency',rewards:'Rewards',education:'Education',
 useEmergency:'Use Emergency Fund 🛡️',whyNeed:'Why do you need the fund?',reason:'Reason...',howMuchNeed:'How much do you need?',confirm:'Confirm',
 },
 fr: {
-authTagline:'Ton argent, tes règles 💪',loginTitle:'Se connecter',loginSubtitle:'Ton espace financier personnel.',email:'E-mail',emailPlaceholder:'Ton e-mail',password:'Mot de passe',passwordPlaceholder:'Ton mot de passe',newPasswordPlaceholder:'Crée un mot de passe',confirmPassword:'Confirmer le mot de passe',confirmPasswordPlaceholder:'Répète ton mot de passe',login:'Se connecter',noAccount:'Pas encore de compte ?',createAccount:'Créer un compte',backToLogin:'‹ Se connecter',createAccountTitle:'Créer ton compte',createAccountSubtitle:'Commence à organiser ton argent.',name:'Nom',namePlaceholder:'Comment t’appelles-tu ?',hasAccount:'Tu as déjà un compte ?',skip:'Passer',continue:'Continuer →',startApp:'Commencer avec MiDinero',invalidEmail:'Entre un e-mail valide.',shortPassword:'Le mot de passe doit contenir 6 caractères.',passwordMismatch:'Les mots de passe ne correspondent pas.',emailExists:'Cet e-mail a déjà un compte.',invalidLogin:'E-mail ou mot de passe incorrect.',accountCreated:'Compte créé avec succès.',logoutTitle:'Se déconnecter ?',logoutDesc:'Tes données resteront enregistrées dans ton compte.',logout:'Se déconnecter',account:'COMPTE',help:'AIDE',tutorial:'Tutoriel MiDinero',tutorialDesc:'Découvre à nouveau le fonctionnement de l’application.',onb1Title:'Bienvenue sur MiDinero 👋',onb1Text:'Organise ton argent, contrôle tes dépenses et suis tes progrès.',onb2Title:'Note l’argent reçu 💵',onb2Text:'Enregistre chaque revenu pour garder ton solde à jour.',onb3Title:'Organise ton argent 📂',onb3Text:'Crée tes catégories et choisis le pourcentage de chacune.',onb4Title:'Note tes dépenses 🛒',onb4Text:'Chaque dépense est retirée de sa catégorie.',onb5Title:'Crée des objectifs 🎯',onb5Text:'Définis ce que tu veux atteindre et suis tes progrès.',onb6Title:'Comprends tes chiffres 📊',onb6Text:'Consulte dépenses, revenus, fonds et statistiques.',onb7Title:'Encore plus à découvrir ✨',onb7Text:'Défis, succès, séries, historique, budget et santé financière.',onbDoneTitle:'Tout est prêt 🚀',onbDoneText:'Tu connais les bases. Organise ton argent à ta façon.',celebClose:'Super!',expense:'💳 Dépense',whichFund:'De quel fonds?',
+splashSub:'Ton argent, tes règles 💪',celebClose:'Super!',expense:'💳 Dépense',whichFund:'De quel fonds?',
 whatBought:'Qu\'as-tu acheté?',howMuch:'Combien?',category:'Catégorie:',cancel:'Annuler',save:'Enregistrer',
 goalTitle:'Objectif 🎯',whatWant:'Que veux-tu acheter?',goalEx:'Ex: Casque',price:'Prix',deadline:'Date limite',
 priorityGoal:'⭐ Prioritaire',savingTip:'En épargnant',day:'jour',youHaveIn:'tu l\'auras dans',weeks:'semaines',saveGoal:'Enregistrer',
@@ -2389,7 +2221,7 @@ savings:'Épargne',emergency:'Urgence',rewards:'Loisirs',education:'Éducation',
 useEmergency:'Fonds Urgence 🛡️',whyNeed:'Pourquoi?',reason:'Raison...',howMuchNeed:'Combien?',confirm:'Confirmer',
 },
 pt: {
-authTagline:'Seu dinheiro, suas regras 💪',loginTitle:'Entrar',loginSubtitle:'Seu espaço financeiro pessoal.',email:'E-mail',emailPlaceholder:'Seu e-mail',password:'Senha',passwordPlaceholder:'Sua senha',newPasswordPlaceholder:'Crie uma senha',confirmPassword:'Confirmar senha',confirmPasswordPlaceholder:'Repita sua senha',login:'Entrar',noAccount:'Ainda não tem uma conta?',createAccount:'Criar conta',backToLogin:'‹ Entrar',createAccountTitle:'Crie sua conta',createAccountSubtitle:'Comece a organizar seu dinheiro.',name:'Nome',namePlaceholder:'Como você se chama?',hasAccount:'Já tem uma conta?',skip:'Pular',continue:'Continuar →',startApp:'Começar com MiDinero',invalidEmail:'Digite um e-mail válido.',shortPassword:'A senha deve ter pelo menos 6 caracteres.',passwordMismatch:'As senhas não coincidem.',emailExists:'Este e-mail já possui uma conta.',invalidLogin:'E-mail ou senha incorretos.',accountCreated:'Conta criada com sucesso.',logoutTitle:'Sair da conta?',logoutDesc:'Seus dados continuarão salvos na sua conta.',logout:'Sair da conta',account:'CONTA',help:'AJUDA',tutorial:'Tutorial do MiDinero',tutorialDesc:'Conheça novamente como o app funciona.',onb1Title:'Bem-vindo ao MiDinero 👋',onb1Text:'Organize seu dinheiro, controle gastos e acompanhe seu progresso.',onb2Title:'Registre o dinheiro recebido 💵',onb2Text:'Registre cada entrada para manter seu saldo atualizado.',onb3Title:'Organize seu dinheiro 📂',onb3Text:'Crie categorias e escolha o percentual de cada uma.',onb4Title:'Registre seus gastos 🛒',onb4Text:'Cada gasto é descontado da categoria correspondente.',onb5Title:'Crie metas 🎯',onb5Text:'Defina o que quer alcançar e acompanhe seu progresso.',onb6Title:'Entenda seus números 📊',onb6Text:'Consulte gastos, entradas, fundos e estatísticas.',onb7Title:'Muito mais para descobrir ✨',onb7Text:'Desafios, conquistas, sequências, histórico, orçamento e saúde financeira.',onbDoneTitle:'Tudo pronto 🚀',onbDoneText:'Você já conhece o básico. Organize seu dinheiro do seu jeito.',celebClose:'Incrível!',expense:'🛒 Despesa',whichFund:'De qual fundo?',
+splashSub:'Seu dinheiro, suas regras 💪',celebClose:'Incrível!',expense:'🛒 Despesa',whichFund:'De qual fundo?',
 whatBought:'O que comprou?',howMuch:'Quanto custou?',category:'Categoria:',cancel:'Cancelar',save:'Salvar',
 goalTitle:'Meta 🎯',whatWant:'O que quer comprar?',goalEx:'Ex: Fones',price:'Preço',deadline:'Prazo',
 priorityGoal:'⭐ Prioritária',savingTip:'Economizando',day:'dia',youHaveIn:'terá em',weeks:'semanas',saveGoal:'Salvar meta',
@@ -2488,84 +2320,6 @@ const ICONS = [
     '🐶','🐱','🐭','🐰','🐻','🐼','🐨','🐸','🐵','🦄','🐾','🍼','👶'
 ];
 const COLORS = ['#34C759','#007AFF','#AF52DE','#FF2D55','#FF9500','#FFCC00','#FF3B30','#5856D6','#00C7BE','#D2C3F6','#FF6B6B','#4ECDC4','#45B7D1','#96CEB4','#FFEAA7','#DDA0DD','#85C1E9','#82E0AA','#F8C471','#F1948A'];
-
-function freshAccountData() {
-    return { cfg: { dailyAmount: 1.00, currency: '$', lang: 'es', theme: 'dark', weeklyBudget: 0, biweeklyBudget: 0, monthlyBudget: 0, annualBudget: 0 }, entries: [], expenses: [], fundsByCategory: {}, fundHistory: [], goals: [], streak: 0, lastDate: '', xp: 0, achs: {}, chals: {}, chalDate: '', profile: { name: 'Estudiante', avatar: '🎓' }, curWeek: 1, categories: DEFAULT_CATS.map(c => ({ ...c })), whatIfPresets: [] };
-}
-async function hashPassword(value) {
-    if (window.crypto?.subtle) {
-        const bytes = new TextEncoder().encode(value);
-        const digest = await crypto.subtle.digest('SHA-256', bytes);
-        return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-    let hash = 2166136261;
-    for (let i = 0; i < value.length; i++) hash = Math.imul(hash ^ value.charCodeAt(i), 16777619);
-    return (hash >>> 0).toString(16);
-}
-function setAuthError(id, message) { const target = document.getElementById(id); if (target) { target.textContent = message; target.classList.toggle('show', !!message); } }
-function showAuthPanel(id) { document.querySelectorAll('#authScreen .auth-panel').forEach(p => p.style.display = p.id === id ? 'block' : 'none'); setAuthError('loginError', ''); setAuthError('signupError', ''); }
-function showAuthScreen() { document.body.classList.add('auth-locked'); document.getElementById('authScreen')?.classList.add('show'); document.getElementById('onboardingScreen')?.classList.remove('show'); showAuthPanel('loginPanel'); }
-function hideAuthScreen() { document.body.classList.remove('auth-locked'); document.getElementById('authScreen')?.classList.remove('show'); }
-function setRuntimeFromAccount(record) {
-    const data = record.data || freshAccountData();
-    const defaults = freshAccountData();
-    cfg = { ...defaults.cfg, ...(data.cfg || {}) }; lang = cfg.lang || 'es';
-    entries = data.entries || []; expenses = data.expenses || []; fundsByCategory = data.fundsByCategory || {}; fundHistory = data.fundHistory || []; goals = data.goals || []; streak = data.streak || 0; lastDate = data.lastDate || ''; xp = data.xp || 0; achs = data.achs || {}; chals = data.chals || {}; chalDate = data.chalDate || ''; profile = { ...defaults.profile, ...(data.profile || {} )}; curWeek = data.curWeek || 1; categories = data.categories || defaults.categories; whatIfPresets = data.whatIfPresets || [];
-    _lsCache.clear(); cachedThemeColors = null;
-    document.body.classList.toggle('theme-light', cfg.theme === 'light');
-    applyTranslations(); updateAll(true); renderFunds(); renderTransferSelectors();
-}
-async function createAccount() {
-    const name = document.getElementById('signupName').value.trim(); const email = document.getElementById('signupEmail').value.trim().toLowerCase(); const password = document.getElementById('signupPassword').value; const confirm = document.getElementById('signupConfirm').value;
-    setAuthError('signupError', '');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setAuthError('signupError', t('invalidEmail'));
-    if (password.length < 6) return setAuthError('signupError', t('shortPassword'));
-    if (password !== confirm) return setAuthError('signupError', t('passwordMismatch'));
-    if (cloudEnabled) {
-        const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { display_name: name || 'Estudiante' } } });
-        if (error) return setAuthError('signupError', error.message);
-        if (!data.user) return setAuthError('signupError', t('confirmEmail'));
-        if (!data.session) return setAuthError('signupError', t('confirmEmail') === 'confirmEmail' ? 'Revisa tu correo para confirmar la cuenta.' : t('confirmEmail'));
-        const record = await loadCloudAccount(data.user.id, data.user.email, name);
-        await flushCloudSave();
-        hideAuthScreen(); startOnboarding(); showToast(t('accountCreated'), 's'); return;
-    }
-    if (Object.values(accountsStore).some(account => account.email === email)) return setAuthError('signupError', t('emailExists'));
-    const id = 'user_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); const data = freshAccountData(); data.profile.name = name || 'Estudiante';
-    accountsStore[id] = createUserRecord(id, email, name, await hashPassword(password), data); currentUserId = id; writeJSON(ACCOUNT_STORE_KEY, accountsStore); writeJSON(SESSION_STORE_KEY, currentUserId); setRuntimeFromAccount(accountsStore[id]); hideAuthScreen(); startOnboarding(); showToast(t('accountCreated'), 's');
-}
-async function loginAccount() {
-    const email = document.getElementById('loginEmail').value.trim().toLowerCase(); const password = document.getElementById('loginPassword').value; const account = Object.values(accountsStore).find(item => item.email === email);
-    setAuthError('loginError', '');
-    if (cloudEnabled) {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error || !data.user) return setAuthError('loginError', error?.message || t('invalidLogin'));
-        const record = await loadCloudAccount(data.user.id, data.user.email, data.user.user_metadata?.display_name || 'Estudiante');
-        hideAuthScreen(); if (!record.onboardingCompleted) startOnboarding(); return;
-    }
-    if (!account || (account.passwordHash && account.passwordHash !== await hashPassword(password))) return setAuthError('loginError', t('invalidLogin'));
-    currentUserId = account.id; writeJSON(SESSION_STORE_KEY, currentUserId); setRuntimeFromAccount(account); hideAuthScreen(); if (!account.onboardingCompleted) startOnboarding();
-}
-async function logoutAccount() { if (cloudEnabled) { await flushCloudSave(); stopRealtime(); await supabaseClient.auth.signOut(); } else { persistActiveAccount(); } currentUserId = null; _lsCache.clear(); writeJSON(SESSION_STORE_KEY, null); showAuthScreen(); }
-async function initCloudSession() {
-    if (!cloudEnabled) return false;
-    const { data } = await supabaseClient.auth.getSession();
-    if (!data.session?.user) return false;
-    const user = data.session.user;
-    const record = await loadCloudAccount(user.id, user.email, user.user_metadata?.display_name || 'Estudiante');
-    hideAuthScreen();
-    if (!record.onboardingCompleted) startOnboarding();
-    return true;
-}
-const ONBOARDING_STEPS = [
-    ['onb1Title','onb1Text','👋',['💰','📊']],['onb2Title','onb2Text','💵',['＋','💵']],['onb3Title','onb3Text','📂',['🍔','🏠','🎯']],['onb4Title','onb4Text','🛒',['🛒','−','💰']],['onb5Title','onb5Text','🎯',['🎯','📈']],['onb6Title','onb6Text','📊',['📊','📈','💳']],['onb7Title','onb7Text','✨',['🏆','🔥','🧠']]
-];
-let onboardingIndex = 0;
-function startOnboarding() { onboardingIndex = 0; document.getElementById('onboardingScreen')?.classList.add('show'); renderOnboarding(); }
-function renderOnboarding() { const step = ONBOARDING_STEPS[onboardingIndex]; const done = onboardingIndex === ONBOARDING_STEPS.length - 1; document.getElementById('onboardingIcon').textContent = step[2]; document.getElementById('onboardingTitle').textContent = t(step[0]); document.getElementById('onboardingText').textContent = t(step[1]); document.getElementById('onboardingDemo').innerHTML = step[3].map(icon => '<span>' + icon + '</span>').join(''); document.getElementById('onboardingDots').innerHTML = ONBOARDING_STEPS.map((_, i) => '<span class="onboarding-dot ' + (i === onboardingIndex ? 'active' : '') + '"></span>').join(''); document.getElementById('onboardingNext').textContent = t(done ? 'startApp' : 'continue'); }
-function nextOnboarding() { if (onboardingIndex < ONBOARDING_STEPS.length - 1) { onboardingIndex++; renderOnboarding(); } else finishOnboarding(); }
-function finishOnboarding() { if (currentUserId && accountsStore[currentUserId]) { accountsStore[currentUserId].onboardingCompleted = true; persistActiveAccount(); } document.getElementById('onboardingScreen')?.classList.remove('show'); }
-function skipOnboarding() { finishOnboarding(); }
 
 let cfg = ld('cfg', { dailyAmount: 1.00, currency: '$', lang: 'es', theme: 'dark', weeklyBudget: 0, biweeklyBudget: 0, monthlyBudget: 0, annualBudget: 0 });
 let currentBudgetIndex = 0; // 0: Semanal, 1: Quincenal, 2: Mensual, 3: Anual
@@ -3469,8 +3223,6 @@ function closeModal(id) {
 const m = document.getElementById(id);
 if (m) { m.classList.remove('show'); syncBodyScroll(); if (id === 'settingsModal') closeSettingsSubScreen(); }
 }
-function openLogoutModal() { openModal('logoutModal'); }
-function confirmLogout() { closeModal('logoutModal'); closeModal('settingsModal'); logoutAccount(); }
 
 function openSettings() {
     if (navigator.vibrate) navigator.vibrate(10);
@@ -3534,8 +3286,6 @@ function updateSettingsSubValues() {
     const cSub = document.getElementById('currSub');
     const catsCountSub = document.getElementById('catsCountSub');
     const distSubVal = document.getElementById('distSubVal');
-    const accountName = document.getElementById('accountName');
-    const accountEmail = document.getElementById('accountEmail');
 
     if (bSub) bSub.textContent = Number(cfg.weeklyBudget) > 0 ? curr(cfg.weeklyBudget) : t('notSet');
     if (dSub) dSub.textContent = curr(cfg.dailyAmount || 1);
@@ -3544,8 +3294,6 @@ function updateSettingsSubValues() {
     if (cSub) cSub.textContent = cfg.currency + ' ' + ({ '$': 'USD', '€': 'EUR', '£': 'GBP', 'S/.': 'PEN', 'COP': 'COP', 'MXN': 'MXN' }[cfg.currency] || '');
     if (catsCountSub) catsCountSub.textContent = categories.length;
     if (distSubVal) distSubVal.textContent = categories.reduce((s, c) => s + (Number(c.percentage) || 0), 0) + '%';
-    if (accountName) accountName.textContent = profile.name || accountsStore[currentUserId]?.name || 'Estudiante';
-    if (accountEmail) accountEmail.textContent = accountsStore[currentUserId]?.email || '';
 }
 
 function saveBudgetFromSubScreen() {
@@ -4947,13 +4695,12 @@ function saveProfile() {
     sv('profile', profile);
     closeModal('profileModal');
     showToast(t('profileUpdated') + ' 👤', 's');
-    updateSettingsSubValues();
     updateAll();
 }
 
 // ===== DATA MANAGEMENT =====
 function exportJSON() {
-    const data = { cfg, entries, expenses, fundsByCategory, fundHistory, goals, streak, lastDate, xp, achs, chals, chalDate, profile, curWeek, categories, whatIfPresets };
+    const data = { cfg, entries, expenses, fundsByCategory, fundHistory, goals, streak, lastDate, xp, achs, chals, chalDate, profile, curWeek, categories };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a'); a.href = url; a.download = 'midinero_' + new Date().toISOString().slice(0, 10) + '.json'; a.click();
@@ -4988,7 +4735,6 @@ function importData() {
         if (d.profile) profile = d.profile;
         if (d.curWeek) curWeek = d.curWeek;
         if (d.categories) categories = d.categories;
-        if (d.whatIfPresets) whatIfPresets = d.whatIfPresets;
         lang = cfg.lang || 'es';
         cachedThemeColors = null;
         document.body.classList.toggle('theme-light', cfg.theme === 'light');
@@ -5002,7 +4748,7 @@ function importData() {
         showToast(t('importErr') + ' ❌', 'e');
     }
 }
-function resetAll() { if (confirm(t('confirmReset'))) { const data = freshAccountData(); if (currentUserId && accountsStore[currentUserId]) { accountsStore[currentUserId].data = data; persistActiveAccount(); setRuntimeFromAccount(accountsStore[currentUserId]); showToast(t('deletedAll'), 'w'); } } }
+function resetAll() { if (confirm(t('confirmReset'))) { localStorage.clear(); location.reload(); } }
 function saveAll() {
     sv('cfg', cfg); sv('entries', entries); sv('expenses', expenses);
     sv('fundsByCategory', fundsByCategory); sv('fundHistory', fundHistory);
@@ -5220,18 +4966,25 @@ function updateAll(force = false) {
 let searchDebounceTimer = null;
 let resizeDebounceTimer = null;
 
-window.addEventListener('load', async () => {
-    if (cloudEnabled) {
-        currentUserId = null;
-        const restored = await initCloudSession().catch(error => { console.error('MiDinero cloud session failed', error); return false; });
-        if (!restored) showAuthScreen();
-    } else if (currentUserId && accountsStore[currentUserId]) setRuntimeFromAccount(accountsStore[currentUserId]);
-    else showAuthScreen();
+window.addEventListener('load', () => {
     if (cfg.theme === 'light') document.body.classList.add('theme-light');
     lang = cfg.lang || 'es';
     applyTranslations();
     mkParticles();
     initChals();
+    
+    const bar = document.querySelector('.splash-bar-fill');
+    if (bar) {
+        setTimeout(() => bar.style.width = '65%', 200);
+        setTimeout(() => bar.style.width = '100%', 750);
+    }
+    setTimeout(() => {
+        const s = el('splash');
+        if (s) {
+            s.classList.add('hide');
+            setTimeout(() => s.style.display = 'none', 500);
+        }
+    }, 1500);
     
     checkAchs();
     renderFunds();
@@ -5239,7 +4992,6 @@ window.addEventListener('load', async () => {
     initBudgetWidgetStack();
     initWhatIfWidgetStack();
     updateAll(true);
-    if (currentUserId && accountsStore[currentUserId] && !accountsStore[currentUserId].onboardingCompleted) startOnboarding();
     
     // Delegated ripple handler for ultra-responsiveness
     document.addEventListener('click', (e) => {
